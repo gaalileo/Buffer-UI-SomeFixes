@@ -35,7 +35,7 @@ const useJackpotInfo = () => {
           minSize: BigDivide(data[0].result),
           minSizes: {
             ARB: BigDivide(data[0].result),
-            USDC: BigDivide(data[2].result),
+            USDC: BigDivide6(data[2].result),
           },
           poolBalance: BigDivide(data[1].result),
         };
@@ -74,4 +74,8 @@ const getUSDCPool = () => {
 const BigDivide = (num) => {
   if (!num) return 0n;
   return BigInt(num) / BigInt(10 ** 18);
+};
+const BigDivide6 = (num) => {
+  if (!num) return 0n;
+  return BigInt(num) / BigInt(10 ** 6);
 };

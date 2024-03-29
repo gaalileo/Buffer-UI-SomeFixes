@@ -18,6 +18,8 @@ import { Tab } from './Tab';
 import { TabsDropdown } from './TabsDropDown';
 import { toLangKey } from '@Utils/langUtils';
 import { useTranslation } from 'react-i18next';
+import { useOngoingTrades as useOngoingTradesAB } from '@Views/ABTradePage/Hooks/useOngoingTrades';
+import { useAboveBelowMarketsSetter } from '@Views/AboveBelow/Hooks/useAboveBelowMarketsSetter';
 
 interface INavbar {}
 
@@ -48,6 +50,8 @@ export const Navbar: React.FC<INavbar> = () => {
   };
   const { openOngoingTradesShutter, shutterState } = useShutterHandlers();
   const [activeTrades, limitOrderTrades] = useOngoingTrades();
+  const activeTradesAB = useOngoingTradesAB();
+  useAboveBelowMarketsSetter();
   const navigate = useNavigate();
   const [click, setClick] = useState(0);
   const openAdmin = () => {
@@ -76,11 +80,15 @@ export const Navbar: React.FC<INavbar> = () => {
         <div className="a1200:hidden flex gap-x-4 items-center pl-4">
           <MemoHamburgerSVG onClick={handleClose} />
           <MemoWalletSVG
-            count={activeTrades.length + limitOrderTrades.length}
+            onClick={openOngoingTradesShutter}
+            count={
+              activeTrades.length +
+              limitOrderTrades.length +
+              activeTradesAB.length
+            }
             className={
               shutterState.open == 'ActiveOrders' ? 'text-1' : 'text-[#808191]'
             }
-            onClick={openOngoingTradesShutter}
           />
         </div>
 

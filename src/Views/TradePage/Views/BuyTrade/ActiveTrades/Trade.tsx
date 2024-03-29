@@ -21,6 +21,9 @@ import { TradeDataView } from './TradeDataView';
 import { TradePoolChip } from './TradePoolChip';
 import { TradeTimeElapsed } from './TradeTimeElapsed';
 import { TradeTypeChip } from './TradeTypeChip';
+import { isABRouter } from '@Views/TradePage/config';
+import { JackpotChip } from '@Views/Jackpot/JackpotChip';
+import { getJackpotKey, useJackpotManager } from 'src/atoms/JackpotState';
 
 const TradeCardBackground = styled.div`
   padding: 12px 16px;
@@ -29,9 +32,17 @@ const TradeCardBackground = styled.div`
   margin-top: 8px;
 `;
 
-export const TradeCard = ({ trade }: { trade: TradeType }) => {
-  const { getPoolInfo } = usePoolInfo();
+export const TradeCard = ({
+  trade,
+  sm,
+}: {
+  trade: TradeType;
+  sm?: boolean;
+}) => {
   const tradeMarket = trade.market;
+  const { getPoolInfo } = usePoolInfo();
+
+  console.log(`Trade-tradeMarket: `, trade);
   const cachedPrices = useAtomValue(queuets2priceAtom);
   const { data: allSpreads } = useSpread();
   const spread = allSpreads?.[trade.market.tv_id].spread ?? 0;
@@ -41,12 +52,20 @@ export const TradeCard = ({ trade }: { trade: TradeType }) => {
   const isQueued = trade.state === TradeState.Queued && !isPriceArrived;
   if (!tradeMarket) return <>Error</>;
 
-  const poolInfo = getPoolInfo(trade.pool.pool);
+  const isAb = isABRouter(trade.router);
+  const poolInfo = isAb ? trade.pool : getPoolInfo(trade.pool.pool);
+  console.log(`Trade-trade.pool: `, trade);
   const pairName = joinStrings(tradeMarket.token0, tradeMarket.token1, '-');
   const isUp = trade.is_above;
   const tradeType = trade.is_limit_order ? 'Limit order' : 'Market';
   const isLimitorder =
     trade.is_limit_order && trade.state === TradeState.Queued;
+  // console.log(`Trade-isAb: `, isAb);
+  const jackpotManager = useJackpotManager();
+  const jackpote18 =
+    jackpotManager.jackpot.jackpots?.[getJackpotKey(trade)]?.jackpot_amount ||
+    trade?.jackpot_amount ||
+    '0';
   return (
     <TradeCardBackground>
       <ColumnGap gap="15px">
@@ -56,7 +75,12 @@ export const TradeCard = ({ trade }: { trade: TradeType }) => {
               <PairTokenImage pair={pairName} />
             </div>
             <White12pxText>{pairName}</White12pxText>
-            <DirectionChip isUp={isUp} shouldShowArrow />
+            <DirectionChip
+              isUp={isUp}
+              upText={isAb ? 'Above' : 'Up'}
+              downText={isAb ? 'Below' : 'Down'}
+              shouldShowArrow
+            />
             <Visualized queue_id={trade.queue_id} className="hidden sm:block" />
             {!isLimitorder && (
               <>
@@ -76,8 +100,12 @@ export const TradeCard = ({ trade }: { trade: TradeType }) => {
         <TimerChip trade={trade} />
       </ColumnGap>
       <TradeTimeElapsed trade={trade} />
-      <div className="mb-3">
-        <TradePoolChip assetName={poolInfo.token} />
+      <div className="mb-3 flex items-center gap-3">
+        <TradePoolChip
+          assetName={trade.token}
+          className="!px-[4px] !py-[3px] !text-f11  !rounded-[4px]  !font-[500] !text-[#C3C2D4]"
+        />
+        <JackpotChip jackpote18={jackpote18} />
       </div>
 
       <TradeDataView
@@ -85,11 +113,13 @@ export const TradeCard = ({ trade }: { trade: TradeType }) => {
         poolInfo={poolInfo}
         configData={tradeMarket}
       />
-      <TradeActionButton
-        trade={trade}
-        tradeMarket={tradeMarket}
-        poolInfo={poolInfo}
-      />
+      {isAb ? null : (
+        <TradeActionButton
+          trade={trade}
+          tradeMarket={tradeMarket}
+          poolInfo={poolInfo}
+        />
+      )}
     </TradeCardBackground>
   );
 };

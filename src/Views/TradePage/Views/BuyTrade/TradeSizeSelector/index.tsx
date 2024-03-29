@@ -107,10 +107,8 @@ export const PlatfromFeeError = ({
 }) => {
   const { t } = useTranslation();
   const jackpotValue = useJackpotInfo();
-  console.log(`index-jackpotValue: `, jackpotValue);
   const jackpotEligibilityValue =
     jackpotValue?.minSizes?.[tradeToken]?.toString();
-  console.log(`index-jackpotEligibilityValue: `, jackpotEligibilityValue);
   const jackpotEligible = gte(tradeSize || '0', jackpotEligibilityValue || '1');
   const notEnoughForTrade = gt(tradeSize || '0', balance);
   const notEnooghForFee = gt(add(tradeSize || '0', platfromFee), balance);

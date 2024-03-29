@@ -38,6 +38,7 @@ import {
   getExpiry,
   getLockedAmount,
   getProbability,
+  queuedTradeFallBack,
   tableButtonClasses,
 } from './Common';
 import { useNavigateToProfile } from './HistoryTable';
@@ -241,15 +242,17 @@ export const OngoingTradesTable: React.FC<{
         );
       case TableColumn.Probability:
         return (
-          <div className="flex gap-2 items-center">
-            <Probability
-              isColored
-              className=" !justify-start"
-              trade={trade}
-              marketPrice={marketPrice}
-            />{' '}
-            <JackpotChip jackpote18={jackpote18} />
-          </div>
+          queuedTradeFallBack(trade, true) || (
+            <div className="flex gap-2 items-center">
+              <Probability
+                isColored
+                className=" !justify-start"
+                trade={trade}
+                marketPrice={marketPrice}
+              />{' '}
+              <JackpotChip jackpote18={jackpote18} />
+            </div>
+          )
         );
     }
     return t('unhandled-body');
