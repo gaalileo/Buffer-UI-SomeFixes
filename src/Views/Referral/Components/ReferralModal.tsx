@@ -4,6 +4,7 @@ import { Dialog, IconButton } from "@mui/material";
 import React from "react";
 import BufferInput from "@Views/Common/BufferInput";
 import { PrimaryBtn } from "@Views/Common/Buttons";
+import { useTranslation } from "react-i18next";
 
 const ReferralModalStyles = styled.div`
   background-color: var(--dropdown-hover);
@@ -38,6 +39,7 @@ export const ReferralCodeModal: React.FC<IReferralModal> = ({
   setInputVal,
   inputVal,
 }) => {
+  const { t } = useTranslation();
   if (!isOpen) return <></>;
   return (
     <Dialog open={isOpen} onClose={closeModal}>
@@ -50,7 +52,7 @@ export const ReferralCodeModal: React.FC<IReferralModal> = ({
           value={inputVal}
           onChange={(newValue) => setInputVal(newValue)}
           className="bg-5 ip-border my-4 mt-6 minww mb-5"
-          placeholder="Enter your code"
+          placeholder={t('enter-your-code')}
           // unit={<img className="" src="/EditIcon.svg"></img>}
         ></BufferInput>{" "}
         {btn}

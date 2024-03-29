@@ -34,6 +34,7 @@ import styled from '@emotion/styled';
 import { useAtom, useAtomValue } from 'jotai';
 import { getAddress } from 'viem';
 import { PoolDropdown } from './PoolDropDown';
+import { useTranslation } from 'react-i18next';
 
 const TradeSizeSelectorBackground = styled.div`
   margin-top: 16px;
@@ -49,6 +50,7 @@ export const TradeSize: React.FC<{
   const selectedStrike = useAtomValue(selectedPriceAtom);
   const { address: userAddress } = useUserAccount();
   const contracts = useNumberOfContracts();
+  const { t } = useTranslation();
 
   if (activeMarket === undefined || readCallData === undefined) return <></>;
   const token = activeMarket.poolInfo.token.toUpperCase();
@@ -94,7 +96,7 @@ export const TradeSize: React.FC<{
               {selectedStrike?.[activeMarket.tv_id]?.isAbove ? 'Up' : 'Down'})
             </span>
           ) : ( */}
-          <BuyTradeHeadText>Amount</BuyTradeHeadText>
+          <BuyTradeHeadText>{t('amount')}</BuyTradeHeadText>
           {/* )} */}
 
           <WalletBalance
@@ -185,14 +187,15 @@ export function getTradeSizeError(
   balance: string | undefined,
   tradeSize: string
 ) {
+  const { t } = useTranslation();
   const minTradeSize = '0';
   let error = '';
   if (lt(tradeSize || '0', '0')) {
-    error = `Trade size must be higher than ${minTradeSize}`;
+    error = `${t('trade-size-must-be-higher-than')} ${minTradeSize}`;
   } else if (gt(tradeSize || '0', maxTradeSize)) {
-    error = `Max trade size is ${toFixed(maxTradeSize, 2)}`;
+    error = `${t('max-trade-size-is')} ${toFixed(maxTradeSize, 2)}`;
   } else if (balance && gt(tradeSize || '0', balance)) {
-    error = 'Insufficient balance';
+    error = t('insufficient-balance');
   }
 
   return error;
@@ -208,12 +211,12 @@ export function getPlatformError({
   tradeSize: string;
 }) {
   let error = '';
-
+  const { t } = useTranslation();
   if (
     gte(balance, tradeSize || '0') &&
     lt(balance, add(tradeSize || '0', platfromFee))
   ) {
-    error = 'Insufficient funds for platform fee.';
+    error = t('insufficient-funds-for-platform-fee');
   }
   return error;
 }

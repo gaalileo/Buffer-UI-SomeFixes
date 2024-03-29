@@ -45,6 +45,7 @@ import {
 import { useNavigateToProfile } from './HistoryTable';
 import { Visualized } from './Visualized';
 import { getJackpotKey, useJackpotManager } from 'src/atoms/JackpotState';
+import { useTranslation } from 'react-i18next';
 
 export const OngoingTradesTable: React.FC<{
   trades: TradeType[] | undefined;
@@ -76,6 +77,7 @@ export const OngoingTradesTable: React.FC<{
   const { registeredOneCT } = useOneCTWallet();
   const { data: allSpreads } = useSpread();
   const navigateToProfile = useNavigateToProfile();
+  const { t } = useTranslation();
 
   let strikePriceHeading = 'Strike Price';
   if (isMobile) {
@@ -188,14 +190,14 @@ export const OngoingTradesTable: React.FC<{
                     }}
                     isLoading={earlyCloseLoading?.[trade.queue_id] == 2}
                   >
-                    Close
+                    {t('close')}
                   </GreyBtn>
                 </div>
               </NumberTooltip>
             )}
           </div>
         ) : (
-          'Processing...'
+            t('processing')
         );
       case TableColumn.Strike:
         return <StrikePriceComponent trade={trade} spread={spread} />;
@@ -280,7 +282,7 @@ export const OngoingTradesTable: React.FC<{
           // )
         );
     }
-    return 'Unhandled Body';
+    return t('unhandled-body');
   };
 
   const Accordian = (row: number) => {
@@ -322,7 +324,7 @@ export const OngoingTradesTable: React.FC<{
 
         <RowBetween className="mt-5">
           <ColumnGap gap="3px">
-            <div className={headerClass}>Current Price</div>
+            <div className={headerClass}>{t('current-price')}</div>
             <Display
               className="!justify-start"
               data={round(
@@ -354,7 +356,7 @@ export const OngoingTradesTable: React.FC<{
           </ColumnGap>
 
           <ColumnGap gap="3px">
-            <div className={headerClass}>Probability</div>
+            <div className={headerClass}>{t('probability')}</div>
             <div className={descClass}>
               <Probability trade={trade} marketPrice={marketPrice} />
             </div>
@@ -390,7 +392,7 @@ export const OngoingTradesTable: React.FC<{
         }
       }}
       overflow={overflow}
-      error={<TableErrorRow msg="No active trades present." />}
+      error={<TableErrorRow msg={t('no-active-trades-present')} />}
       loading={isLoading}
       className={className}
       accordianJSX={!isNotMobile && platform ? Accordian : undefined}
@@ -414,6 +416,7 @@ export const Pnl = ({
   shouldShowUnit?: boolean;
   shouldShowCalculating?: boolean;
 }) => {
+  const { t } = useTranslation();
   const { pnl, probability } = useEarlyPnl({
     trade,
     configData,
@@ -422,7 +425,7 @@ export const Pnl = ({
   });
   // console.log(pnl, probability, 'pnl');
   if (!probability)
-    return shouldShowCalculating ? <div>Calculating..</div> : <span></span>;
+    return shouldShowCalculating ? <div>{t('calculating')}</div> : <span></span>;
   const isWin = gt(pnl.earlycloseAmount, '0');
   if (trade.locked_amount || lockedAmmount)
     return (
@@ -468,6 +471,7 @@ const Probability: React.FC<{
   trade: TradeType;
   marketPrice: any;
 }> = ({ marketPrice, trade }) => {
+  const { t } = useTranslation();
   const IV =
     calculateOptionIV(
       trade.is_above ?? false,
@@ -482,6 +486,6 @@ const Probability: React.FC<{
     +getCachedPriceFromKlines(trade.market),
     IV
   );
-  if (!probabiliyt) return <div>Calculating..</div>;
+  if (!probabiliyt) return <div>{t('calculating')}</div>;
   return <div> {toFixed(probabiliyt, 2) + '%'}</div>;
 };

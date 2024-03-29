@@ -6,6 +6,8 @@ import NoMatchFound from 'src/SVG/Elements/NoMatchFound';
 import { useAccount } from 'wagmi';
 import { useUserAccount } from '@Hooks/useUserAccount';
 import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 
 interface ITableErrorMsg {
   msg: string;
@@ -31,6 +33,7 @@ const TableErrorMsg: React.FC<ITableErrorMsg> = ({
     dispatch({ type: 'SET_DRAWER', payload: true });
     openWalletDrawer();
   };
+  const { t } = useTranslation();
   const errorMsg =
     shouldShowWalletMsg && !account ? "Wallet isn't connected" : msg;
   return (
@@ -42,7 +45,7 @@ const TableErrorMsg: React.FC<ITableErrorMsg> = ({
           className={'button'}
           onClick={account ? onClick : openConnectModal}
         >
-          {account ? btn : 'Connect Wallet'}
+          {account ? t(toLangKey(btn)) : t('connect-wallet')}
         </PrimaryActionBtn>
       )}
     </Background>

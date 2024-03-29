@@ -8,7 +8,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
-    debug: true,
+    debug: (import.meta.env.VITE_MODE !== 'production'), // don't debug in production
     fallbackLng: "en",
     // backend: {
     //   loadPath: '/locales/{{lng}}/{{ns}}.json',

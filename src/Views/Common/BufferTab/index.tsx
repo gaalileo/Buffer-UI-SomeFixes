@@ -32,7 +32,7 @@ const BufferTab: React.FC<IBufferTab> = ({
                 onClick={(e) => {
                   handleChange(e, idx);
                 }}
-                className={`  ${value == idx && 'selected-button'}`}
+                className={`${value == idx && 'selected-button'}`}
               >
                 {/* {singleTab.name} */}
                 {t(toLangKey(singleTab.name))}

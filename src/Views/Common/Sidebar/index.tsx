@@ -17,6 +17,10 @@ import { CloseButton } from '@Views/TradePage/Components/CloseButton';
 import BackIcon from '@SVG/buttons/back';
 import MemoHamburgerBack from '@SVG/Elements/sidebarCollpaseIcon';
 import { NewChip, newTabs } from '../Navbar';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
+import { t } from '@lingui/macro';
+
 const social = [
   {
     Img: Twitter,
@@ -48,6 +52,7 @@ const SideBar: React.FC<any> = () => {
   const newPageNavElements = 9;
   const { state, dispatch } = useGlobal();
   const options = getTabs();
+  const { t } = useTranslation();
 
   const handleChange = (link: string) => {
     handleClose();
@@ -67,9 +72,8 @@ const SideBar: React.FC<any> = () => {
       )}
 
       <div
-        className={`bg-1 sidebar  ${
-          state.sidebar_active ? '' : 'sidebar-closed'
-        } a1400:!hidden`}
+        className={`bg-1 sidebar  ${state.sidebar_active ? '' : 'sidebar-closed'
+          } a1400:!hidden`}
       >
         <div className="sidebar_container flex-col items-start">
           <div className="icon_container mb-6 ml-3">
@@ -77,7 +81,7 @@ const SideBar: React.FC<any> = () => {
               className="flex items-center justify-between w-full"
               role={'button'}
               onClick={
-                () => {}
+                () => { }
                 // router.push({
                 //   pathname: "/",
                 // })
@@ -101,7 +105,7 @@ const SideBar: React.FC<any> = () => {
                 >
                   {/* <SidebarIcon id={option.id} active={active} /> */}
                   <div className="name flex items-center gap-2">
-                    {option.name} {newTabs.includes(option.name) && <NewChip />}
+                    {t(toLangKey(option.name))} {newTabs.includes(option.name) && <NewChip />}
                   </div>{' '}
                 </button>
               );
@@ -120,7 +124,7 @@ const SideBar: React.FC<any> = () => {
                 }
               >
                 <div className="name flex items-center gap-2">
-                  {option.name} {newTabs.includes(option.name) && <NewChip />}
+                    {t(toLangKey(option.name))} {newTabs.includes(option.name) && <NewChip />}
                 </div>
               </NavLink>
             );
@@ -166,6 +170,7 @@ const SubTabDropDown = ({
       type: 'UPDATE_SIDEBAR_STATE',
     });
   };
+  const { t } = useTranslation();
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <>
@@ -178,7 +183,7 @@ const SubTabDropDown = ({
         >
           <div className="flex-center dropdown">
             {/* <SidebarIcon id={option.id} active={active} /> */}
-            <div className="name">{defaultName}</div>
+            <div className="name">{t(toLangKey(defaultName))}</div>
           </div>
           <div className="liftup">
             <ExpandMoreIcon className={`arrow ${!open ? '' : 'rotate'} `} />
@@ -193,11 +198,11 @@ const SubTabDropDown = ({
                   to={option.to}
                   className={({ isActive }) =>
                     `dropdown-item ${isActive ? 'active' : ''} 
-          `
+                    `
                   }
                 >
                   <div className="name" role={'button'} onClick={handleClose}>
-                    {option.name}
+                    {toLangKey(toLangKey(option.name))}
                   </div>
                 </NavLink>
               );

@@ -4,12 +4,14 @@ import { PairTokenImage } from '@Views/Common/PairTokenImage';
 import NumberTooltip from '@Views/Common/Tooltips';
 import { TradeType } from '@Views/ABTradePage/type';
 import { UpDownChip } from './UpDownChip';
+import { useTranslation } from 'react-i18next';
 
 export const AssetCell: React.FC<{
   currentRow: TradeType;
   split?: boolean;
   platform?: boolean;
 }> = ({ currentRow, split, platform }) => {
+  const { t } = useTranslation();
   const isHidden = currentRow.is_above === undefined;
   const isUp = currentRow.is_above;
   const token0 = currentRow.market.token0;
@@ -30,8 +32,8 @@ export const AssetCell: React.FC<{
         <NumberTooltip
           content={
             platform || isHidden
-              ? 'Trade directions are hidden.'
-              : 'You chose ' + (isUp ? 'Up' : 'Down')
+              ? t('trade-directions-are-hidden')
+              : t('you-chose') + " " + (isUp ? t('up') : t('down'))
           }
         >
           <div className={`flex  -ml-[6px]`}>

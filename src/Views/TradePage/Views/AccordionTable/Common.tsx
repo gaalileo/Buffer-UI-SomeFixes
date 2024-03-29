@@ -137,6 +137,7 @@ export const TableHeader: React.FC<ITableHeader> = ({
 }) => {
   const { t } = useTranslation();
   if (col > headsArr.length) return <div>{t('unhandled-col-of-header')}</div>;
+  console.log("===>>>", toLangKey(headsArr[col] as string))
   return (
     <TableHeads
       style={col === 0 ? firstColClassName + ' ' + className : className}

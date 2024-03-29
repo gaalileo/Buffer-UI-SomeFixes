@@ -16,19 +16,23 @@ import { BufferLogoComponent } from './BufferLogo';
 import { SettingsDD } from './SettingsDD';
 import { Tab } from './Tab';
 import { TabsDropdown } from './TabsDropDown';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 
 interface INavbar {}
 
 export function NewChip() {
+  const { t } = useTranslation();
   return (
     <div className="text-light-blue text-f12 px-2 py-1 rounded-[5px] bg-[#18181f]">
-      New
+      {t('new')}
     </div>
   );
 }
 export const newTabs = ['Above/Below'];
 
 export const Navbar: React.FC<INavbar> = () => {
+  const { t } = useTranslation();
   const { dispatch } = useGlobal();
   const activeMarketFromStorage = useAtomValue(activeMarketFromStorageAtom);
   const tabs = useMemo(
@@ -95,7 +99,7 @@ export const Navbar: React.FC<INavbar> = () => {
                       window.open(tab.to, '_blank');
                     }}
                   >
-                    {tab.name}
+                    {t(toLangKey(tab.name))}
                     {newTabs.includes(tab.name) && <NewChip />}
                   </button>
                 );

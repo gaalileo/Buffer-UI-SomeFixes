@@ -21,6 +21,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { ReactNode } from 'react';
 import { useAccount } from 'wagmi';
+import { useTranslation } from 'react-i18next';
 
 export const BuyButtons = ({
   allowance,
@@ -34,7 +35,7 @@ export const BuyButtons = ({
   isApprovalLocked: boolean | undefined;
 }) => {
   const marketPrice = useAtomValue(priceAtom);
-
+  const { t } = useTranslation();
   const { activeMarket } = useActiveMarket();
   const activeAssetPrice = getLastbar(marketPrice, {
     tv_id: activeMarket.tv_id,
@@ -65,7 +66,7 @@ export const BuyButtons = ({
     if (activeAssetPrice == null)
       return toastify({
         type: 'error',
-        msg: 'Price not found',
+        msg: t('price-not-found'),
         id: 'lo no strike',
       });
 
@@ -77,7 +78,7 @@ export const BuyButtons = ({
       if (!limitStrike)
         return toastify({
           type: 'error',
-          msg: 'Please select a strike price',
+          msg: t('please-select-a-strike-price'),
           id: 'lo no strike',
         });
       limitOrderExpiry = expiry ?? '0';
@@ -95,7 +96,7 @@ export const BuyButtons = ({
   if (viewOnlyMode)
     return (
       <BlueBtn isDisabled onClick={() => {}}>
-        View Only Mode
+        {t('view-only-mode')}
       </BlueBtn>
     );
   return (
@@ -121,15 +122,15 @@ export const BuyButtons = ({
               isDisabled={true}
               onClick={() => {}}
             >
-              <span>Trading is halted for this asset</span>
+                <span>{t('trading-is-halted-for-this-asset')}</span>
             </BlueBtn>
           ) : !registeredOneCT ? (
             <BlueBtn onClick={() => setOneCTModal(true)}>
-              <span>Activate Account</span>
+                  <span>{t('activate-account')}</span>
             </BlueBtn>
           ) : lt(allowance, amount.toString() || '0') ? (
             <BlueBtn onClick={() => handleApproveClick()}>
-              <span>Approve</span>
+                    <span>{t('approve')}</span>
             </BlueBtn>
           ) : (
             <>
@@ -154,7 +155,7 @@ export const BuyButtons = ({
                   {center && tradeType == 'Limit' ? (
                     <div className="flex justify-between items-center w-full px-[13px] py-[3px] pt-[2px] ">
                       <div className="flex-col flex items-start">
-                        <span className="text-f14 font-bold mb-[-2px]">Up</span>
+                                <span className="text-f14 font-bold mb-[-2px]">{t('up')}</span>
                         <span className="text-f11">{limitStrike}</span>
                       </div>
                       <div>
@@ -164,7 +165,7 @@ export const BuyButtons = ({
                   ) : (
                     <>
                       <UpIcon className="mr-[6px] scale-150" />
-                      <span>Up</span>
+                                <span>{t('up')}</span>
                     </>
                   )}
                 </BufferButton>
@@ -189,7 +190,7 @@ export const BuyButtons = ({
                     <div className="flex justify-between items-center w-full px-[13px] py-[3px] pt-[2px] flex-row-reverse ">
                       <div className="flex-col flex items-end">
                         <span className="text-f14 font-bold mb-[-2px]">
-                          Down
+                                  {t('down')}
                         </span>
                         <span className="text-f11">{limitStrike}</span>
                       </div>
@@ -200,7 +201,7 @@ export const BuyButtons = ({
                   ) : (
                     <>
                       <DownIcon className="mr-[6px] scale-150" />
-                      <span>Down</span>
+                                <span>{t('down')}</span>
                     </>
                   )}
                 </BufferButton>
@@ -211,7 +212,7 @@ export const BuyButtons = ({
                   role={'button'}
                   onClick={() => revokeApproveClick()}
                 >
-                  <span>Revoke Approval</span>
+                          <span>{t('revoke-approval')}</span>
                 </div>
               )}
             </>

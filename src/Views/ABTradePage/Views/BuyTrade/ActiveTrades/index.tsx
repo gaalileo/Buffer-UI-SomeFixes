@@ -8,10 +8,12 @@ import { NoTrades } from './NoTrades';
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useShutterHandlers } from '@Views/Common/MobileShutter/MobileShutter';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 
 const tableTypes = ['Trades', 'Limit Orders'];
 
-export const ActiveTrades: React.FC<{ isMobile?: boolean }> = ({
+export const ActiveTrades: React.FC<{ isMobile?: boolean; }> = ({
   isMobile,
 }) => {
   const [tableType, setTableType] = useState(tableTypes[0]);
@@ -22,6 +24,7 @@ export const ActiveTrades: React.FC<{ isMobile?: boolean }> = ({
   const navigate = useNavigate();
   const { closeShutter } = useShutterHandlers();
   const trades = !isLimitOrderTable ? activeTrades : limitOrderTrades;
+  const { t } = useTranslation();
   return (
     <>
       <div className="w-full b1200:sticky b1200:top-[0px] b1200:z-50 bg-[#282b39] flex justify-evenly text-f14 rounded-t-[8px] py-[8px]  mt-3">
@@ -34,14 +37,13 @@ export const ActiveTrades: React.FC<{ isMobile?: boolean }> = ({
               }
               onClick={() => setTableType(s)}
             >
-              {s}
+              {t(toLangKey(s))}
             </div>
           );
         })}
         <button
-          className={`bg-primary w-[22px] h-[22px] rounded-[6px] grid  place-items-center ${
-            isTableShown ? 'cursor-not-allowed' : 'hover:text-1'
-          }  transition-colors text-3`}
+          className={`bg-primary w-[22px] h-[22px] rounded-[6px] grid  place-items-center ${isTableShown ? 'cursor-not-allowed' : 'hover:text-1'
+            }  transition-colors text-3`}
           onClick={() => {
             if (isMobile) {
               closeShutter();

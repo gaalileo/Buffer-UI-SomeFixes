@@ -16,6 +16,8 @@ import { useDayOfTournament } from '../Hooks/useDayOfTournament';
 import { useWeekOfTournament } from '../Hooks/useWeekOfTournament';
 import { weeklyTournamentConfig } from '../Weekly/config';
 import { DailyTournamentConfig } from '../Incentivised/config';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 
 export const MobileLeaderboardDropdwon = () => {
   const { activeChain } = useActiveChain();
@@ -145,6 +147,7 @@ const LinkButton = ({
   isDisabled?: boolean;
   chip?: JSX.Element;
 }) => {
+  const { t } = useTranslation()
   return (
     <div className={`relative`} key={tab.id}>
       <Link
@@ -161,7 +164,7 @@ const LinkButton = ({
         />
 
         <div className={`ml-3 ${active && 'text-1 font-semibold'} w-fit`}>
-          {tab.name}
+          {t(toLangKey(tab.name))}
         </div>
 
         <div className="pr-3 ml-3">{chip}</div>
@@ -233,11 +236,12 @@ const CSChip = ({
   className?: string;
   text?: string;
 }) => {
+  const { t } = useTranslation()
   return (
     <div
       className={`py-2 px-3 text-f12 text-3 font-medium mr-2 rounded-md ${className}`}
     >
-      {text}
+      {t(toLangKey(text))}
     </div>
   );
 };

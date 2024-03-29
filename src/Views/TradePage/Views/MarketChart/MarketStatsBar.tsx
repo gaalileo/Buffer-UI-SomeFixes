@@ -23,6 +23,8 @@ import { CurrentPrice } from '../BuyTrade/ActiveTrades/CurrentPrice';
 import { OneDayChange } from '../Markets/AssetSelectorDD/AssetSelectorTable/OneDayChange';
 import { MarketSelectorDD } from './MarketSelectorDD';
 import { Payout } from './Payout';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 
 const OneChart = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -98,6 +100,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
   const anchorProps = useClick(menuState.state, toggleMenu);
   const readcallData = useAtomValue(buyTradeDataAtom);
   const { data: allSpreads } = useSpread();
+  const { t } = useTranslation();
 
   let maxFee = null;
   let maxOI = null;
@@ -145,7 +148,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
   const arr = [1, 2.5, 2, 4];
   const data = [
     {
-      header: '24h Change',
+      header: t('24h-change'),
       data:
         oneDayChange === undefined ? (
           <Skeleton className="w-[50px] !h-5 lc " />
@@ -158,7 +161,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
         ),
     },
     {
-      header: 'Max Trade Size',
+      header: t('max-trade-size'),
       data:
         maxFee === null ? (
           <Skeleton className="w-[80px] !h-5 lc " />
@@ -173,7 +176,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
     },
 
     {
-      header: 'Max Spread',
+      header: t('max-spread'),
       data:
         spread === null ? (
           <Skeleton className="w-[60px] !h-5 lc " />
@@ -188,7 +191,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
         ),
     },
     {
-      header: 'Payout',
+      header: t('payout'),
       data: (
         <Payout
           token0={activeMarket.token0}
@@ -200,7 +203,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
     {
       header: (
         <div className="flex items-center ">
-          Max OI:&nbsp;
+          {t('max-oi')}:&nbsp;
           {maxOI === null ? (
             <Skeleton className="w-[40px] !h-5 lc " />
           ) : (
@@ -215,7 +218,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
           <NumberTooltip
             content={
               currentOI
-                ? `Current OI : ${currentOI} ${poolDetails?.token} / Max OI : ${maxOI} ${poolDetails?.token} `
+                  ? `${t('current-oi')} : ${currentOI} ${poolDetails?.token} / ${t('max-oi')} : ${maxOI} ${poolDetails?.token} `
                 : ''
             }
           >
@@ -306,7 +309,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
                   }}
                   key={idx}
                 >
-                  <Icon className="mr-2" /> &nbsp;{Math.floor(s)} Chart
+                  <Icon className="mr-2" /> &nbsp;{Math.floor(s)} {t('chart')}
                   {s > 1 ? 's' : ''}
                 </MenuItem>
               );

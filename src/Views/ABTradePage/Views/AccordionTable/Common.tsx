@@ -144,7 +144,7 @@ export const TableHeader: React.FC<ITableHeader> = ({
     <TableHeads
       style={col === 0 ? firstColClassName + ' ' + className : className}
     >
-      <Trans i18nKey={toLangKey(headsArr[col] as string)} />
+      {t(toLangKey(headsArr[col] as string))}
       {/* {headsArr[col]} */}
     </TableHeads>
   );
@@ -155,7 +155,7 @@ export const CustomTableHeader: React.FC<{
 }> = ({ content, className = '' }) => {
   const { t } = useTranslation();
   return <TableHeads style={className}>
-    <Trans i18nKey={toLangKey(content)} />
+    {t(toLangKey(content))}
     {/* {content} */}
   </TableHeads>;
 };

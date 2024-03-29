@@ -3,13 +3,14 @@ import { RowBetween, RowGap } from '@Views/ABTradePage/Components/Row';
 import styled from '@emotion/styled';
 import { Skeleton } from '@mui/material';
 import { atom, useAtom, useAtomValue } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 export const priceFormatAtom = atom<'Asset' | 'ROI'>('ROI');
 
 export const PriceFormat = () => {
   const [priceFormat, setPriceFormat] = useAtom(priceFormatAtom);
   const activeMarket = useAtomValue(selectedPoolActiveMarketAtom);
-
+  const { t } = useTranslation();
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     setPriceFormat(event.target.value as 'Asset' | 'ROI');
   }
@@ -17,7 +18,7 @@ export const PriceFormat = () => {
     return <Skeleton variant="rectangular" width="100%" height="10px" />;
   return (
     <RowBetween className="text-[#7F87A7] text-f12 font-normal mt-[10px] mb-[6px]">
-      Show price as
+      {t('show-price-as')}
       <RowGap gap="12px">
         {['Asset', 'ROI'].map((asset, index) => {
           const isActive = priceFormat === asset;
@@ -69,7 +70,7 @@ const RadioInput = styled.input`
   &:after {
     content: ''; /* Required for the pseudo-element */
     display: ${(props) =>
-      props.checked ? 'block' : 'none'}; /* Show after for checked state */
+  props.checked ? 'block' : 'none'}; /* Show after for checked state */
     width: 8px; /* Adjust size */
     height: 8px; /* Adjust size */
     background-color: #a3e3ff; /* Color of the inner circle */

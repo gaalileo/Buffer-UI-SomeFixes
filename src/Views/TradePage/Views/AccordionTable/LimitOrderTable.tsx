@@ -67,7 +67,7 @@ const LimitOrderTable = ({
 
   const headNameArray = [
     'Asset',
-    'TriggerPrice',
+    'Trigger Price',
     'Current Price',
     'Duration',
     'Order Expiry',

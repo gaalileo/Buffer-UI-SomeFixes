@@ -5,6 +5,7 @@ import { timeSelectorAtom, tradeSizeAtom } from '@Views/TradePage/atoms';
 import { HHMMToSeconds, secondsToHHMM } from '@Views/TradePage/utils';
 import { PlusOne } from '@mui/icons-material';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 const ViewOnlyInputs: React.FC<any> = ({}) => {
   const { openNormalOrdersShutter } = useShutterHandlers();
@@ -12,7 +13,7 @@ const ViewOnlyInputs: React.FC<any> = ({}) => {
   const amount = useAtomValue(tradeSizeAtom);
   const currentTime = useAtomValue(timeSelectorAtom);
   const setDuration = useSetAtom(timeSelectorAtom);
-
+  const { t } = useTranslation();
   return (
     <div className="flex items-center gap-x-3 font-[500]">
       <div className="flex w-full  bg-[#282B39] items-center rounded-[5px]">
@@ -25,7 +26,7 @@ const ViewOnlyInputs: React.FC<any> = ({}) => {
             openNormalOrdersShutter();
           }}
         >
-          {amount ? amount : ' Enter'}
+          {amount ? amount : " " + t('enter')}
         </button>
         <PoolDropdown />
       </div>

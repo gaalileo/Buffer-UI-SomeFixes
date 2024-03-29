@@ -42,6 +42,7 @@ import {
 } from './Common';
 import { useNavigateToProfile } from './HistoryTable';
 import { Visualized } from './Visualized';
+import { useTranslation } from 'react-i18next';
 
 export const OngoingTradesTable: React.FC<{
   trades: TradeType[] | undefined;
@@ -73,6 +74,7 @@ export const OngoingTradesTable: React.FC<{
   const { registeredOneCT } = useOneCTWallet();
   const { data: allSpreads } = useSpread();
   const navigateToProfile = useNavigateToProfile();
+  const { t } = useTranslation();
 
   let strikePriceHeading = 'Strike Price';
   if (isMobile) {
@@ -124,7 +126,6 @@ export const OngoingTradesTable: React.FC<{
     const trade = trades?.[row];
     if (!trade) return 'Problem';
     if (!trade.market) return 'Not able to find';
-
     const spread = allSpreads?.[trade.market.tv_id]?.spread ?? 0;
 
     const poolInfo = trade.pool;
@@ -171,7 +172,7 @@ export const OngoingTradesTable: React.FC<{
             <Visualized queue_id={trade.queue_id} />
           </div>
         ) : (
-          'Processing...'
+            t('processing')
         );
       case TableColumn.Strike:
         return <StrikePriceComponent trade={trade} spread={spread} />;
@@ -251,16 +252,16 @@ export const OngoingTradesTable: React.FC<{
           </div>
         );
     }
-    return 'Unhandled Body';
+    return t('unhandled-body');
   };
 
   const Accordian = (row: number) => {
     const trade = trades?.[row];
     // const [marketPrice] = useAtom(priceAtom);
-
-    if (!trade) return <>Something went wrong.</>;
+    const { t } = useTranslation();
+    if (!trade) return <>{t('something-went-wrong')}</>;
     const poolInfo = trade.pool;
-    if (!poolInfo) return <>Something went wrong.</>;
+    if (!poolInfo) return <>{t('something-went-wrong')}</>;
     const minClosingTime = getExpiry(trade);
 
     const headerClass = 'text-[#808191] text-f12';
@@ -293,7 +294,7 @@ export const OngoingTradesTable: React.FC<{
 
         <RowBetween className="mt-5">
           <ColumnGap gap="3px">
-            <div className={headerClass}>Current Price</div>
+            <div className={headerClass}>{t('current-price')}</div>
             <Display
               className="!justify-start"
               data={round(
@@ -325,7 +326,7 @@ export const OngoingTradesTable: React.FC<{
           </ColumnGap>
 
           <ColumnGap gap="3px">
-            <div className={headerClass}>Probability</div>
+            <div className={headerClass}>{t('probability')}</div>
             <div className={descClass}>
               <Probability trade={trade} marketPrice={marketPrice} />
             </div>
@@ -361,7 +362,7 @@ export const OngoingTradesTable: React.FC<{
         }
       }}
       overflow={overflow}
-      error={<TableErrorRow msg="No active trades present." />}
+      error={<TableErrorRow msg={t('no-active-trades-present')} />}
       loading={isLoading}
       className={className}
       accordianJSX={!isNotMobile && platform ? Accordian : undefined}
@@ -385,6 +386,7 @@ export const Pnl = ({
   shouldShowUnit?: boolean;
   shouldShowCalculating?: boolean;
 }) => {
+  const { t } = useTranslation();
   const { pnl, probability } = useEarlyPnl({
     trade,
     configData,
@@ -405,7 +407,7 @@ export const Pnl = ({
         unit={shouldShowUnit ? poolInfo.token : undefined}
       />
     );
-  return <div>Calculating..</div>;
+  return <div>{t('calculating')}</div>;
 };
 
 const progressAnimation = keyframes`
@@ -475,13 +477,14 @@ export const Probability: React.FC<{
 }> = ({ trade, className = '', isColored = false }) => {
   const { data: ivs } = useIV();
   const { price } = useMarketPrice(trade.market.tv_id);
+  const { t } = useTranslation();
 
   if (!ivs) {
-    return <>processing...</>;
+    return <>{t('processing-0')}</>;
   }
   const iv = ivs[trade.market.tv_id];
   if (iv === undefined) {
-    return <>processing...</>;
+    return <>{t('processing-0')}</>;
   }
   if (trade.state === 'QUEUED') {
     return <></>;
@@ -490,11 +493,11 @@ export const Probability: React.FC<{
     return <>-</>;
   }
   if (price === undefined) {
-    return <>No Price</>;
+    return <>{t('no-price')}</>;
   }
   const currentEpoch = Math.round(new Date().getTime() / 1000);
   if (currentEpoch > +trade.expiration_time) {
-    return <>processing...</>;
+    return <>{t('processing-0')}</>;
   }
 
   const probability =

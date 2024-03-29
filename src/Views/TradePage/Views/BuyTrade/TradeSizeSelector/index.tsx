@@ -27,6 +27,7 @@ import { TradeSizeInput } from './TradeSizeInput';
 import { WalletBalance, formatBalance } from './WalletBalance';
 import { useJackpotInfo } from '@Views/Jackpot/useJackpotInfo';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const TradeSizeSelectorBackground = styled.div`
   margin-top: 15px;
@@ -40,6 +41,7 @@ export const TradeSizeSelector: React.FC<{
   const readcallData = useAtomValue(buyTradeDataAtom);
   const { registeredOneCT } = useOneCTWallet();
   const tradeSize = useAtomValue(tradeSizeAtom);
+  const { t } = useTranslation();
 
   if (!poolDetails || !readcallData || !switchPool) return <></>;
 
@@ -58,7 +60,7 @@ export const TradeSizeSelector: React.FC<{
       <ColumnGap gap="7px" className="w-full">
         <RowBetween>
           <RowGap gap="4px">
-            <BuyTradeHeadText>Trade Size</BuyTradeHeadText>
+            <BuyTradeHeadText>{t('trade-size')}</BuyTradeHeadText>
           </RowGap>
 
           <WalletBalance
@@ -103,6 +105,7 @@ export const PlatfromFeeError = ({
   balance: string;
   tradeSize: string;
 }) => {
+  const { t } = useTranslation();
   const jackpotValue = useJackpotInfo();
   console.log(`index-jackpotValue: `, jackpotValue);
   const jackpotEligibilityValue =
@@ -117,21 +120,21 @@ export const PlatfromFeeError = ({
       {jackpotEligible ? (
         <>
           <LightToolTipSVG className="mt-[2px]" />
-          Eligible for{' '}
+          {t('eligible-for')}{' '}
           <Link to="/Jackpot" className="hover:underline hover:cursor-pointer">
-            Jackpot
+            {t('jackpot')}
           </Link>{' '}
           💰{' '}
         </>
       ) : (
         <>
           <LightToolTipSVG className="mt-[2px]" />
-          Add {Math.ceil(
+            {t('add')} {Math.ceil(
             +subtract(jackpotEligibilityValue, tradeSize || '0')
           )}{' '}
-          for
+            {t('for')}
           <Link to="/Jackpot" className="hover:underline hover:cursor-pointer">
-            Jackpot
+              {t('jackpot')}
           </Link>{' '}
           💰{' '}
         </>
@@ -148,14 +151,14 @@ export const PlatfromFeeError = ({
       {isError ? (
         <>
           <div className="flex items-center gap-2">
-            Insufficient funds for platform fee.{' '}
+            {t('insufficient-funds-for-platform-fee')}{' '}
             <BuyUSDCLink token={tradeToken as 'ARB'} />
           </div>
         </>
       ) : (
         !isError && (
           <>
-            Platform fee : + {platfromFee} {tradeToken}
+              {t('platform-fee')} : + {platfromFee} {tradeToken}
             {JackpotChip}
           </>
         )

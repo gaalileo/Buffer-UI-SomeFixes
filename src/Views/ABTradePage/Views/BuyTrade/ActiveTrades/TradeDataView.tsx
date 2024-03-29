@@ -26,6 +26,7 @@ import {
 import { CurrentPrice } from './CurrentPrice';
 import { DataCol } from './DataCol';
 import { StrikePrice } from './StrikePrice';
+import { useTranslation } from 'react-i18next';
 
 export const TradeDataView: React.FC<{
   trade: TradeType;
@@ -36,7 +37,7 @@ export const TradeDataView: React.FC<{
   const cachedPrices = useAtomValue(queuets2priceAtom);
   const { data: allSpreads } = useSpread();
   const spread = allSpreads?.[trade.market.tv_id].spread ?? 0;
-
+  const { t } = useTranslation();
   const { isPriceArrived } = getStrike(trade, cachedPrices, spread);
   const lockedAmmount = getLockedAmount(trade, cachedPrices);
 
@@ -80,7 +81,7 @@ export const TradeDataView: React.FC<{
           <RowGap gap="4px">
             <span>Pnl</span>
             <span>|</span>
-            <span className="text-[10px]">probability</span>
+            <span className="text-[10px]">{t('probability-0')}</span>
           </RowGap>
         ),
         desc: (
@@ -90,13 +91,13 @@ export const TradeDataView: React.FC<{
         ),
       },
       {
-        head: <span>Current price</span>,
+        head: <span>{t('current-price-0')}</span>,
         desc: (
           <CurrentPrice token0={configData.token0} token1={configData.token1} />
         ),
       },
       {
-        head: <span>Trade Size</span>,
+        head: <span>{t('trade-size')}</span>,
         desc: (
           <Display
             data={divide(trade.trade_size, poolInfo.decimals)}
@@ -106,7 +107,7 @@ export const TradeDataView: React.FC<{
         ),
       },
       {
-        head: <span>Max Payout</span>,
+        head: <span>{t('max-payout')}</span>,
         desc: (
           <span>
             {toFixed(divide(lockedAmmount, poolInfo.decimals) as string, 2)}{' '}
@@ -118,7 +119,7 @@ export const TradeDataView: React.FC<{
   if (trade.is_limit_order && trade.state === TradeState.Queued) {
     TradeData = [
       {
-        head: <span>Trigger Price</span>,
+        head: <span>{t('trigger-price')}</span>,
         desc: (
           <StrikePrice
             slippage={trade.slippage}
@@ -127,11 +128,11 @@ export const TradeDataView: React.FC<{
         ),
       },
       {
-        head: <span>Duration</span>,
+        head: <span>{t('duration')}</span>,
         desc: <>{secondsToHHMM(trade.period)}</>,
       },
       {
-        head: <span>Trade Size</span>,
+        head: <span>{t('trade-size')}</span>,
         desc: (
           <Display
             data={divide(trade.trade_size, poolInfo.decimals)}
@@ -141,7 +142,7 @@ export const TradeDataView: React.FC<{
         ),
       },
       {
-        head: <span>Current price</span>,
+        head: <span>{t('current-price-0')}</span>,
         desc: (
           <CurrentPrice token0={configData.token0} token1={configData.token1} />
         ),
@@ -189,12 +190,12 @@ const PnlData: React.FC<{
     lockedAmmount,
   });
   const { earlycloseAmount, isWin, probability } = earlyPnl;
-  if (!probability) return <span>Calculating...</span>;
+  if (!probability) return <span>{t('calculating-0')}</span>;
   let pnl = <span className="text-red">{toFixed(earlycloseAmount, 2)}</span>;
   if (isWin) {
     pnl = <span className="text-green">+{toFixed(earlycloseAmount, 2)}</span>;
   }
-  if (isExpired) return <>Calculating...</>;
+  if (isExpired) return <>{t('calculating-0')}</>;
   return (
     <RowGap gap="2px" className="!items-end">
       {pnl}

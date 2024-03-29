@@ -28,6 +28,9 @@ import * as chain from 'wagmi/chains';
 import ETHImage from '../../../../public/tokens/ETH.png';
 import { Display } from '../Tooltips/Display';
 import { BlueBtn } from '../V2-Button';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
+
 const token2image = {
   ETH: ETHImage,
 };
@@ -57,6 +60,7 @@ export const AccountDropdown: React.FC = () => {
   const ref = useRef(null);
   const [menuState, toggleMenu] = useMenuState({ transition: true });
   const anchorProps = useClick(menuState.state, toggleMenu);
+  const { t } = useTranslation();
 
   function closeDropdown() {
     toggleMenu(false);
@@ -86,7 +90,7 @@ export const AccountDropdown: React.FC = () => {
         isLoading={disabelLoading}
         isDisabled={state && state === 'PENDING'}
       >
-        Deactivate Account
+        {t('deactivate-account')}
       </BlueBtn>
     );
   } else
@@ -98,7 +102,7 @@ export const AccountDropdown: React.FC = () => {
           setOneCTModal(true);
         }}
       >
-        {nonce && nonce > 0 ? 'Reactivate' : ' Activate'} Acount
+        {nonce && nonce > 0 ? t('reactivate') : " " + t('activate')} Acount
       </BlueBtn>
     );
 
@@ -149,7 +153,7 @@ export const AccountDropdown: React.FC = () => {
                   >
                     <WalletIcon className="mr-[6px] ml-1 text-blue" />
 
-                    <span>{'Connect Wallet'}</span>
+                    <span>{t('connect-wallet')}</span>
                     <ArrowDropDownRounded
                       className={`dropdown-arrow transition-all duration-300 w-6 h-6 ease-out `}
                     />
@@ -170,7 +174,7 @@ export const AccountDropdown: React.FC = () => {
                   >
                     <WalletIcon className="mr-[6px] ml-1" />
 
-                    <span>{'Switch Network'}</span>
+                    <span>{t('switch-network')}</span>
                     <ArrowDropDownRounded
                       className={`dropdown-arrow transition-all duration-300 w-6 h-6 ease-out `}
                     />
@@ -196,7 +200,7 @@ export const AccountDropdown: React.FC = () => {
                         />
                       )}
 
-                      <span className="sm:hidden">{chain.name}</span>
+                      <span className="sm:hidden">{t(toLangKey(chain.name))}</span>
                     </div>
                     <DDArrow
                       className={` transition-all duration-300 ml-2 ease-out mr-2`}
@@ -215,7 +219,7 @@ export const AccountDropdown: React.FC = () => {
                         className="flex items-center font-[500] ml-2 text-f14 bg-[#2C2C41] px-2 rounded-[4px] pb-1"
                         test-id="account-holder-div"
                       >
-                        {account ? `${account.address.slice(0, 6)}` : 'Connect'}
+                        {account ? `${account.address.slice(0, 6)}` : t('connect')}
                         <DDArrow
                           className={` transition-all duration-300 ml-1 ease-out `}
                         />
@@ -241,9 +245,9 @@ export const AccountDropdown: React.FC = () => {
                           <div className="flex flex-col mr-4">
                             {account
                               ? `${account.address.slice(
-                                  0,
-                                  4
-                                )}...${account.address.slice(-4)}`
+                                0,
+                                4
+                              )}...${account.address.slice(-4)}`
                               : 'Connect'}
                             {/* <div className="text-2">Wallet Address</div> */}
                           </div>
@@ -254,7 +258,7 @@ export const AccountDropdown: React.FC = () => {
                                 copyToClipboard(account.address);
                                 setSnack({
                                   message:
-                                    'Account coppied to clipboard Successfully!',
+                                    t('account-coppied-to-clipboard-successfully'),
                                   severity: 'success',
                                 });
                               }}
@@ -322,6 +326,7 @@ export const ConnectionRequired = ({
 }) => {
   const isMobile = useMedia('(max-width:1200px)');
   const { isUserEducated, openTutorial } = useChainTutorial();
+  const { t } = useTranslation();
   return (
     <ConnectButton.Custom>
       {({
@@ -365,7 +370,7 @@ export const ConnectionRequired = ({
                       }
                       className={'px-5 py-[5px] !h-fit ' + className}
                     >
-                      Connect Wallet
+                      {t('connect-wallet')}
                     </BlueBtn>
                   </>
                 );
@@ -382,7 +387,7 @@ export const ConnectionRequired = ({
                     className={'px-5 py-[5px] !h-fit ' + className}
                   >
                     {/* <Wallet className="" /> */}
-                    Switch Network
+                    {t('switch-network')}
                   </BlueBtn>
                 );
               }

@@ -11,6 +11,7 @@ import PNLIcon from 'public/LeaderBoard/PNL';
 import { useRouter } from 'next/router';
 import { useGlobal } from 'Contexts/Global';
 import { MAINNET_ENVS } from '@Config/index';
+import { useTranslation } from 'react-i18next';
 
 const DAILY_LEADERBOARD = `binary/leaderboard/?`;
 const timeList = [
@@ -21,6 +22,7 @@ const timeList = [
 ];
 
 export const PNL = () => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(timeList[0]);
   const router = useRouter();
   const { state } = useGlobal();
@@ -50,7 +52,7 @@ export const PNL = () => {
           heading={'Profit & Loss'}
           desc={
             <div className="flex-center">
-              Compete against the best for prizes.
+              {t('compete-against-the-best-for-prizes')}
               {/* <span
                 className="flex-center light-blue-text ml6"
                 onClick={() => {

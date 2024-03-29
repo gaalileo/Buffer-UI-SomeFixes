@@ -1,6 +1,7 @@
 import BufferDropdown from '@Views/Common/BufferDropdown';
 import { isTestnet } from 'config';
 import { atomWithStorage } from 'jotai/utils';
+import { useTranslation } from 'react-i18next';
 
 export const chartTypes = {
   Bar: {
@@ -231,6 +232,7 @@ const ChartTypeSelectionDD: React.FC<{
   setActive: any;
   isMobile?: boolean;
 }> = ({ active, setActive, isMobile }) => {
+  const { t } = useTranslation();
   const find = Object.keys(chartTypes).find(
     (c) => chartTypes[c].type == active
   );
@@ -267,7 +269,7 @@ const ChartTypeSelectionDD: React.FC<{
           dropdownBox={() => (
             <div className="flex whitespace-nowrap chart-type items-center mr-5 text-f11 ele">
               {chartTypes[find].icon}
-              Chart Type
+              {t('chart-type')}
             </div>
           )}
           rootClass={'!w-[fit-content]'}

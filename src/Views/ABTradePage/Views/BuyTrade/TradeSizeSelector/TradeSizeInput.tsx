@@ -1,4 +1,5 @@
 import { escapeRegExp, inputRegex } from '../CurrentPrice';
+import { useTranslation } from 'react-i18next';
 
 export const TradeSizeInput: React.FC<{
   maxTradeSize: string;
@@ -15,6 +16,7 @@ export const TradeSizeInput: React.FC<{
   tradeSize,
   setMaxValue,
 }) => {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="relative flex flex-row gap-x-4 items-center">
@@ -38,13 +40,13 @@ export const TradeSizeInput: React.FC<{
             }
           }}
           onKeyDown={(e) => e.key == 'Enter' && onSubmit?.()}
-          placeholder="Enter value"
+          placeholder={t('enter-value')}
         />
         <button
           className="absolute right-3 bg-[#141823] rounded-[6px] py-2 px-[6px] text-f12"
           onClick={setMaxValue}
         >
-          Max
+          {t('max')}
         </button>
       </div>
     </div>

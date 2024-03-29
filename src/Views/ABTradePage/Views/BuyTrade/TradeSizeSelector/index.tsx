@@ -19,6 +19,7 @@ import { BuyUSDCLink } from '../BuyUsdcLink';
 import { PoolDropdown } from './PoolDropdown';
 import { TradeSizeInput } from './TradeSizeInput';
 import { WalletBalance, formatBalance } from './WalletBalance';
+import { useTranslation } from 'react-i18next';
 
 const TradeSizeSelectorBackground = styled.div`
   margin-top: 15px;
@@ -31,6 +32,7 @@ export const TradeSizeSelector: React.FC<{
   const { switchPool, poolDetails } = useSwitchPool();
   const readcallData = useAtomValue(buyTradeDataAtom);
   const { registeredOneCT } = useOneCTWallet();
+  const { t } = useTranslation();
 
   if (!poolDetails || !readcallData || !switchPool) return <></>;
 
@@ -49,7 +51,7 @@ export const TradeSizeSelector: React.FC<{
       <ColumnGap gap="7px" className="w-full">
         <RowBetween>
           <RowGap gap="4px">
-            <BuyTradeHeadText>Trade Size</BuyTradeHeadText>
+            <BuyTradeHeadText>{t('trade-size')}</BuyTradeHeadText>
           </RowGap>
 
           <WalletBalance
@@ -95,6 +97,7 @@ const PlatfromFeeError = ({
   const notEnoughForTrade = gt(tradeSize || '0', balance);
   const notEnooghForFee = gt(add(tradeSize || '0', platfromFee), balance);
   const isError = notEnooghForFee;
+  const { t } = useTranslation();
   if (notEnooghForFee && notEnoughForTrade) return <></>;
   return (
     <RowGapItemsTop
@@ -104,13 +107,13 @@ const PlatfromFeeError = ({
       <LightToolTipSVG className="mt-[3px]" />
       {isError ? (
         <>
-          Insufficient funds for platform fee.{' '}
+          {t('insufficient-funds-for-platform-fee')}{' '}
           <BuyUSDCLink token={tradeToken as 'ARB'} />
         </>
       ) : (
         !isError && (
           <>
-            Platform fee : + {platfromFee} {tradeToken}
+              {t('platform-fee')} : + {platfromFee} {tradeToken}
           </>
         )
       )}

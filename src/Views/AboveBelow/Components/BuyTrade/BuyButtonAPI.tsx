@@ -42,6 +42,7 @@ import { KeyedMutator } from 'swr';
 import { PrivateKeyAccount, getAddress } from 'viem';
 import { useAccount } from 'wagmi';
 import { getPlatformError, getTradeSizeError } from './TradeSize';
+import { useTranslation } from 'react-i18next';
 
 export const BuyButton = () => {
   const { viewOnlyMode } = useUserAccount();
@@ -49,11 +50,12 @@ export const BuyButton = () => {
   const { registeredOneCT, oneCTWallet, oneCtPk } = useOneCTWallet();
   const setOneCTModal = useSetAtom(isOneCTModalOpenAtom);
   const activeMarket = useAtomValue(selectedPoolActiveMarketAtom);
+  const { t } = useTranslation();
 
   if (viewOnlyMode)
     return (
       <BlueBtn isDisabled onClick={() => {}}>
-        View Only Mode
+        {t('view-only-mode')}
       </BlueBtn>
     );
 
@@ -61,7 +63,7 @@ export const BuyButton = () => {
     return (
       <ConnectionRequired>
         <BlueBtn onClick={() => setOneCTModal(true)}>
-          <span>Activate Account</span>
+          <span>{t('activate-account')}</span>
         </BlueBtn>
       </ConnectionRequired>
     );
@@ -70,7 +72,7 @@ export const BuyButton = () => {
     return (
       <ConnectionRequired>
         <BlueBtn onClick={() => {}} isDisabled={true}>
-          Select a Market
+          {t('select-a-market')}
         </BlueBtn>
       </ConnectionRequired>
     );
@@ -91,6 +93,7 @@ export const BuyButtonAPI: React.FC<{
   activeChain: Chain;
   oneCtPk: string;
 }> = ({ activeMarket, activeChain, oneCtWallet, oneCtPk }) => {
+  const { t } = useTranslation();
   const amount = useAtomValue(tradeSizeAtom);
   const { data: approvalExpanded, mutate: updateApprovalData } =
     useApprvalAmount();
@@ -109,7 +112,7 @@ export const BuyButtonAPI: React.FC<{
     return (
       <ConnectionRequired>
         <BlueBtn onClick={() => {}} isDisabled={true}>
-          Allowance not found
+          {t('allowance-not-found')}
         </BlueBtn>
       </ConnectionRequired>
     );
@@ -173,13 +176,14 @@ const Approve: React.FC<{
   const { state } = useGlobal();
   const { address } = useAccount();
   const { data: productNames } = useProductName();
+  const { t } = useTranslation();
 
   const handleApproveClick = async (amount = defaultApprovalAmount) => {
     if (state.txnLoading > 1) {
       toastify({
         id: 'dddafsd3',
         type: 'error',
-        msg: 'Please confirm your previous pending transactions.',
+        msg: t('please-confirm-your-previous-pending-transactions'),
       });
       return true;
     }
@@ -187,7 +191,7 @@ const Approve: React.FC<{
       return toastify({
         id: 'dddafsd3',
         type: 'error',
-        msg: 'Please connect your wallet.',
+        msg: t('please-connect-your-wallet'),
       });
 
     const deadline = (Math.round(Date.now() / 1000) + 86400).toString();
@@ -214,14 +218,14 @@ const Approve: React.FC<{
         return toastify({
           id: 'nonce changed in db',
           type: 'error',
-          msg: 'Please sign again.',
+          msg: t('please-sign-again'),
         });
       }
       if (productNames === undefined)
         return toastify({
           id: '10231',
           type: 'error',
-          msg: 'Product name not found.',
+          msg: t('product-name-not-found'),
         });
       const [_, RSV] = res;
       const user_signature = await getSingatureCached(oneCtWallet);
@@ -246,13 +250,13 @@ const Approve: React.FC<{
 
       toastify({
         type: 'success',
-        msg: amount === '0' ? 'Approval Revoked' : 'Approved Successfully.',
+        msg: amount === '0' ? t('approval-revoked') : t('approved-successfully'),
         id: '10231',
       });
     } catch (e) {
       setLoading(null);
 
-      toastify({ type: 'error', msg: 'Something went wrong.', id: '10231' });
+      toastify({ type: 'error', msg: t('something-went-wrong'), id: '10231' });
     }
   };
   return (
@@ -261,7 +265,7 @@ const Approve: React.FC<{
       isLoading={loading !== null}
       isDisabled={loading !== null}
     >
-      Approve
+      {t('approve')}
     </BlueBtn>
   );
 };
@@ -284,7 +288,7 @@ const Buy: React.FC<{
   const token = activeMarket.poolInfo.token.toUpperCase();
   const decimals = activeMarket.poolInfo.decimals;
   const readCallData = useAtomValue(readCallDataAtom);
-
+  const { t } = useTranslation();
   const maxPermissibleContracts = readCallData?.maxPermissibleContracts;
 
   const selectedPrice = useAtomValue(selectedPriceAtom);
@@ -303,7 +307,7 @@ const Buy: React.FC<{
     return (
       <ConnectionRequired>
         <BlueBtn onClick={() => {}} isDisabled={true}>
-          Select a Strike Price
+          {t('select-a-strike-price')}
         </BlueBtn>
       </ConnectionRequired>
     );
@@ -312,7 +316,7 @@ const Buy: React.FC<{
     return (
       <ConnectionRequired>
         <BlueBtn onClick={() => {}} isDisabled={true}>
-          Select a Strike Price
+          {t('select-a-strike-price')}
         </BlueBtn>
       </ConnectionRequired>
     );
@@ -343,6 +347,7 @@ const Buy: React.FC<{
   //   );
   // }
   const buyHandler = async (is_up: boolean) => {
+    const { t } = useTranslation();
     try {
       if (!amount || amount === '0')
         throw new Error('Please enter a valid amount');
@@ -488,24 +493,24 @@ const Buy: React.FC<{
       );
       const content = (
         <div className="flex flex-col gap-y-2 text-f12 ">
-          <div className="nowrap font-[600]">Trade order placed</div>
+          <div className="nowrap font-[600]">{t('trade-order-placed')}</div>
           <div className="flex items-center">
             {activeMarket.token0 + '-' + activeMarket.token1}&nbsp;&nbsp;
             <span className="!text-3">to go</span>&nbsp;&nbsp;
             {priceObj.isAbove ? (
               <>
-                <UpIcon className="text-green scale-125" /> &nbsp;Higher
+                <UpIcon className="text-green scale-125" /> &nbsp;{t('higher')}
               </>
             ) : (
               <>
                 <DownIcon className="text-red scale-125" />
-                &nbsp; Lower
+                  &nbsp; {t('lower')}
               </>
             )}
           </div>
           <div>
             <span>
-              <span className="!text-3">Total amount:</span>
+              <span className="!text-3">{t('total-amount')}:</span>
               {toFixed(amount, 2)}&nbsp;
               {activeMarket.poolInfo.token}
             </span>
@@ -537,7 +542,7 @@ const Buy: React.FC<{
         isLoading={loading === 'buy'}
         isDisabled={loading !== 'None'}
       >
-        Buy
+        {t('buy')}
       </BlueBtn>
     </ConnectionRequired>
   );

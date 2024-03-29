@@ -37,6 +37,7 @@ import {
   tableButtonClasses,
 } from './Common';
 import { Visualized } from './Visualized';
+import { useTranslation } from 'react-i18next';
 
 export const tradesCount = 10;
 
@@ -92,7 +93,7 @@ const LimitOrderTable = ({
   const BodyFormatter: any = (row: number, col: number) => {
     const trade = trades?.[row];
     const spread = allSpreads?.[trade.market.tv_id].spread ?? 0;
-
+    const { t } = useTranslation();
     const marketPrecision = trade.market.price_precision.toString().length - 1;
     const poolInfo = getPoolInfo(trade.pool.pool);
     if (!trade) return 'Problem';
@@ -145,7 +146,7 @@ const LimitOrderTable = ({
                   onClick={() => {
                     if (isModificationPending) {
                       return toastify({
-                        msg: "Can't edit while processing",
+                        msg: t('cant-edit-while-processing'),
                         type: 'error',
                         id: 1212,
                       });
@@ -155,7 +156,7 @@ const LimitOrderTable = ({
                 >
                   {isModificationPending || editLoading == trade.queue_id ? (
                     <NumberTooltip
-                      content={'Processing the Limit Order modification...'}
+                      content={t('processing-the-limit-order-modification')}
                     >
                       <div className="scale-90">
                         <img
@@ -175,14 +176,14 @@ const LimitOrderTable = ({
                     trade.pending_operation == 'Processing CANCEL'
                   }
                 >
-                  Cancel
+                  {t('cancel')}
                 </GreyBtn>
               </>
             )}
           </div>
         );
     }
-    return 'Unhandled Body';
+    return t('unhandled-body');
   };
 
   return (

@@ -23,6 +23,8 @@ import { CancelledTable } from './CancelTable';
 import { HistoryTable } from './HistoryTable';
 import LimitOrderTable from './LimitOrderTable';
 import { OngoingTradesTable } from './OngoingTradesTable';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 const OngoingTradesTableMemo = React.memo(OngoingTradesTable);
 const tables = {
   Trades: 'h',
@@ -34,22 +36,22 @@ const tables = {
 };
 const gap = ['Cancelled'];
 
-const AccordionTable: React.FC<any> = ({}) => {
+const AccordionTable: React.FC<any> = ({ }) => {
   const [expanded, setExpanded] = useAtom(isTableShownAtom);
 
   const activeTrades = useOngoingTrades();
   const setPriceCache = useSetAtom(queuets2priceAtom);
   const priceCache = useAtomValue(queuets2priceAtom);
-
+  const { t } = useTranslation();
   const [activeTable, setActiveTable] = useState('Trades');
   const getAugmentedData = async (
-    queries: { pair: string; timestamp: number; queueId: number }[]
+    queries: { pair: string; timestamp: number; queueId: number; }[]
   ) => {
     const priceResponse = await Promise.all(
       queries.map((q) => getCachedPrice(q))
     );
     setPriceCache((p) => {
-      let newP: { [key: number]: number } = { ...p };
+      let newP: { [key: number]: number; } = { ...p };
       queries.forEach((q, i) => {
         newP[q.queueId] = priceResponse[i];
       });
@@ -58,7 +60,7 @@ const AccordionTable: React.FC<any> = ({}) => {
   };
 
   useEffect(() => {
-    const priceQueries: { pair: string; timestamp: number; queueId: number }[] =
+    const priceQueries: { pair: string; timestamp: number; queueId: number; }[] =
       [];
     activeTrades.forEach((trade) => {
       if (trade.state == 'QUEUED') {
@@ -86,14 +88,13 @@ const AccordionTable: React.FC<any> = ({}) => {
                 setActiveTable(s);
               }}
               key={s}
-              className={`text-${s == activeTable ? '1' : '2'} text-f14 ${
-                gap.filter((i) => i == s).length
+              className={`text-${s == activeTable ? '1' : '2'} text-f14 ${gap.filter((i) => i == s).length
                   ? ' pr-[13px] accordion-table-strip-right-border'
                   : ''
-              }`}
+                }`}
             >
               <div className="flex items-center gap-x-2">
-                {s}
+                {t(toLangKey(s))}
                 {s == 'Trades' && activeTrades.length ? (
                   <CountChip count={activeTrades.length} />
                 ) : s == 'Limit Orders' && limitOrders.length ? (
@@ -107,18 +108,16 @@ const AccordionTable: React.FC<any> = ({}) => {
           className="flex items-center gap-x-2 px-4 text-f14 transition group"
           onClick={() => setExpanded((p) => !p)}
         >
-          {expanded ? 'Hide ' : 'Show '} Positions{' '}
+          {expanded ? t('hide') + " " : t('show') + " "} Positions{' '}
           <DDArrow
-            className={`transition scale group-hover:scale-150  ${
-              expanded ? ' rotate-0' : 'rotate-180'
-            }`}
+            className={`transition scale group-hover:scale-150  ${expanded ? ' rotate-0' : 'rotate-180'
+              }`}
           />
         </button>
       </div>
       <div
-        className={` ${
-          expanded ? 'h-[355px]' : 'h-[0px]'
-        } flex flex-col transition-all  overflow-y-hidden `}
+        className={` ${expanded ? 'h-[355px]' : 'h-[0px]'
+          } flex flex-col transition-all  overflow-y-hidden `}
       >
         {activeTable == 'Trades' ? (
           <OngoingTradesTableMemo
@@ -144,7 +143,7 @@ const AccordionTable: React.FC<any> = ({}) => {
 
 export { AccordionTable };
 
-const CountChip = ({ count }: { count: number }) => (
+const CountChip = ({ count }: { count: number; }) => (
   <div className="text-[#C3C2D4] mt-1 bg-[#171722] text-f10 h-[16px] p-2 pt-[0px] pb-[">
     <span>{count}</span>
   </div>

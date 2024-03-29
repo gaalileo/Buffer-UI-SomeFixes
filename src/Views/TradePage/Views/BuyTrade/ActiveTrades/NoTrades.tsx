@@ -2,13 +2,15 @@ import NoMatchFound from '@SVG/Elements/NoMatchFound';
 import { RowGap } from '@Views/TradePage/Components/Row';
 import { ToolTipSVG } from '@Views/TradePage/Components/ToolTipSVG';
 import styled from '@emotion/styled';
+import { useTranslation } from 'react-i18next';
 
-export const NoTrades: React.FC<{ isLimitOrderTable: boolean }> = ({
+export const NoTrades: React.FC<{ isLimitOrderTable: boolean; }> = ({
   isLimitOrderTable,
 }) => {
+  const { t } = useTranslation();
   const msg = isLimitOrderTable
-    ? 'There are no pending orders'
-    : 'There are no placed trades';
+    ? t('there-are-no-pending-orders')
+    : t('there-are-no-placed-trades');
   return (
     <NoTradesBackground className="b1200:mb-[20vh]">
       <RowGap gap="4px">

@@ -23,6 +23,8 @@ import { CurrentPrice } from '../BuyTrade/ActiveTrades/CurrentPrice';
 import { OneDayChange } from '../Markets/AssetSelectorDD/AssetSelectorTable/OneDayChange';
 import { MarketSelectorDD } from './MarketSelectorDD';
 import { Payout } from './Payout';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 
 const OneChart = (props: SVGProps<SVGSVGElement>) => (
   <svg
@@ -88,7 +90,8 @@ const Idx2icon = {
   2: TwoChartsvertical,
   3: FourCharts,
 };
-const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
+const MarketStatsBar: React.FC<{ isMobile?: boolean; }> = ({ isMobile }) => {
+  const { t } = useTranslation();
   const setChartTimes = useSetAtom(chartNumberAtom);
   const chartTimes = useAtomValue(chartNumberAtom);
   const { activeMarket } = useActiveMarket();
@@ -98,7 +101,6 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
   const anchorProps = useClick(menuState.state, toggleMenu);
   const readcallData = useAtomValue(buyTradeDataAtom);
   const { data: allSpreads } = useSpread();
-
   let maxFee = null;
   let maxOI = null;
   let currentOI = null;
@@ -200,7 +202,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
     {
       header: (
         <div className="flex items-center ">
-          Max OI:&nbsp;
+          {t('max-oi')}:&nbsp;
           {maxOI === null ? (
             <Skeleton className="w-[40px] !h-5 lc " />
           ) : (
@@ -215,7 +217,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
           <NumberTooltip
             content={
               currentOI
-                ? `Current OI : ${currentOI} ${poolDetails?.token} / Max OI : ${maxOI} ${poolDetails?.token} `
+                  ? `${t('current-oi')} : ${currentOI} ${poolDetails?.token} / ${t('max-oi')} : ${maxOI} ${poolDetails?.token} `
                 : ''
             }
           >
@@ -254,15 +256,14 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
         return (
           <div
             key={id}
-            className={`flex flex-col justify-center items-start gap-y-1 ${
-              id == 3 ? 'b1200:items-end' : ''
-            }
+            className={`flex flex-col justify-center items-start gap-y-1 ${id == 3 ? 'b1200:items-end' : ''
+              }
             b1200:w-1/2
             
             ${id == 1 ? 'special-border-b' : ''}`}
           >
             <span className="text-f12 b1200:text-f10 text-[#82828F]">
-              {d.header}
+              {t(toLangKey(d.header as string))}
             </span>
             <span className="text-f12 w-fit b1200:text-f10">{d.data}</span>
           </div>
@@ -296,9 +297,8 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
               return (
                 <MenuItem
                   className={({ hover }) => {
-                    return `  ${
-                      chartTimes == s ? 'text-1' : 'text-2'
-                    } hover:brightness-110 hover:bg-[#232334]  hover:text-1`;
+                    return `  ${chartTimes == s ? 'text-1' : 'text-2'
+                      } hover:brightness-110 hover:bg-[#232334]  hover:text-1`;
                   }}
                   onClick={(e: ClickEvent) => {
                     // e.keepOpen = true;
@@ -306,7 +306,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
                   }}
                   key={idx}
                 >
-                  <Icon className="mr-2" /> &nbsp;{Math.floor(s)} Chart
+                  <Icon className="mr-2" /> &nbsp;{Math.floor(s)} {t('chart')}
                   {s > 1 ? 's' : ''}
                 </MenuItem>
               );
@@ -320,7 +320,7 @@ const MarketStatsBar: React.FC<{ isMobile?: boolean }> = ({ isMobile }) => {
 
 export { MarketStatsBar };
 
-const MarketPrice: React.FC<{ token0: string; token1: string }> = ({
+const MarketPrice: React.FC<{ token0: string; token1: string; }> = ({
   token0,
   token1,
 }) => {

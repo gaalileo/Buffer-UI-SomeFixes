@@ -10,10 +10,11 @@ import { shareSettingsAtom } from '@Views/TradePage/atoms';
 import { defaultSettings } from '@Views/TradePage/config';
 import { Trans } from '@lingui/macro';
 import { useAtom } from 'jotai';
+import { useTranslation } from 'react-i18next';
 
 export const ShareSettings: React.FC<any> = () => {
   const [settings, setSettings] = useAtom(shareSettingsAtom);
-
+  const { t } = useTranslation();
   function resetToDefault() {
     setSettings(defaultSettings.share);
   }
@@ -36,14 +37,14 @@ export const ShareSettings: React.FC<any> = () => {
     <div>
       <RowGapItemsTop gap="4px">
         <SettingsHeaderText>
-          <Trans>Share Related Settings</Trans>
+          <Trans>{t('share-related-settings')}</Trans>
         </SettingsHeaderText>
         <ResetButton onClick={resetToDefault} className="mt-1" />
       </RowGapItemsTop>
       <ColumnGap gap="12px">
         <RowBetween>
           <SettingsText>
-            <Trans>Show trade size</Trans>
+            <Trans>{t('show-trade-size')}</Trans>
           </SettingsText>
           <Switch
             isOn={settings.showTradeSize}
@@ -52,7 +53,7 @@ export const ShareSettings: React.FC<any> = () => {
         </RowBetween>
         <RowBetween>
           <SettingsText>
-            <Trans>Show share pop up</Trans>
+            <Trans>{t('show-share-pop-up')}</Trans>
           </SettingsText>
           <Switch
             isOn={settings.showSharePopup}

@@ -8,6 +8,7 @@ import { useUserCode } from '../Hooks/useUserCode';
 import { affilateCode2ReferralLink } from '../Utils/affiliateCode2RederralLink';
 import { DataCard } from './DataCard';
 import PlainCard from './PlainCard';
+import { useTranslation } from 'react-i18next';
 
 export const Affilate = ({
   affiliateBoxArr,
@@ -20,6 +21,7 @@ export const Affilate = ({
   inputValue: string;
   setInput: (value: string) => void;
 }) => {
+  const { t } = useTranslation();
   const { activeChain } = useActiveChain();
   const { affiliateCode } = useUserCode(activeChain);
   const isCodeSet = !!affiliateCode;
@@ -59,12 +61,11 @@ export const Affilate = ({
 
       <PlainCard.Container className="w-[440px] mt-6 nsm:py-6 tb:px-8 m-auto sm:mt-4">
         <PlainCard.Header>
-          {isCodeSet ? 'Copy your Referral Link' : 'Share your Referral Code'}
+          {isCodeSet ? t('copy-your-referral-link') : t('share-your-referral-code')}
         </PlainCard.Header>
         {!isCodeSet && (
           <PlainCard.Description className="mb-3">
-            Looks like you dont have any referral to share. Create one now and
-            start earning.
+            {t('looks-like-you-dont-have-any-referral-to-share-create-one-now-and-start-earning')}
           </PlainCard.Description>
         )}
         <BufferInput
@@ -98,7 +99,7 @@ export const Affilate = ({
           }
           onChange={setInput}
           className="bg-5 ip-border "
-          placeholder="Enter your code"
+          placeholder={t('enter-your-code')}
         />
         {!isCodeSet && btn}
       </PlainCard.Container>

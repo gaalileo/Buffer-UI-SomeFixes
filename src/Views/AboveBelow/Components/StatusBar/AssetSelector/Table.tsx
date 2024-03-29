@@ -27,6 +27,7 @@ import { getAddress } from 'viem';
 import { OneDayChange } from '../MarketData/OneDayChange';
 import { CloseTag } from './CloseTag';
 import { CurrentPrice } from './CurrentPrice';
+import { useTranslation } from 'react-i18next';
 
 enum TableColumns {
   Star,
@@ -47,6 +48,7 @@ export const Table: React.FC<{
   const navigate = useNavigate();
   const { closeShutter } = useShutterHandlers();
   const { oneDayVolume } = useOneDayVolume();
+  const { t } = useTranslation();
 
   const setActiveMarket = (token0: string, token1: string) => {
     navigateToarket(navigate, token0 + '-' + token1, '/above-below');
@@ -142,7 +144,7 @@ export const Table: React.FC<{
                     });
                   }}
                 >
-                  Schedule
+                  {t('schedule')}
                 </ShowTimingModalButton>
               )}
             </ColumnGap>
@@ -194,7 +196,7 @@ export const Table: React.FC<{
         );
 
       default:
-        return <div>Unhandled Column.</div>;
+        return <div>{t('unhandled-column')}</div>;
     }
   };
 
@@ -208,7 +210,7 @@ export const Table: React.FC<{
         rows={filteredMarkets?.length || 0}
         bodyJSX={BodyFormatter}
         tableClass="b1200:!w-full assetSelectorTableWidth"
-        error={<TableErrorRow msg="No Assets found." />}
+        error={<TableErrorRow msg={t('no-assets-found')} />}
         loading={!filteredMarkets}
         isBodyTransparent
         isHeaderTransparent

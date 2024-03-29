@@ -20,6 +20,7 @@ import { useGlobal } from 'Contexts/Global';
 import { MAINNET_ENVS } from '@Config/index';
 import { ContestFilterDD } from '../Components/ContestFilterDD';
 import { TopData } from '../Components/TopData';
+import { useTranslation } from 'react-i18next';
 
 const DAILY_REWARD = `binary/reward/daily/`;
 const DAILY_LEADERBOARD = `binary/leaderboard/?`;
@@ -64,12 +65,13 @@ export const Daily = () => {
 };
 
 function WinnerCard({ className, rank, winner }) {
+  const { t } = useTranslation();
   return (
     <div className={`winner-card flex-col content-sbw ${className}`}>
       <div className="hf">
         <div className="f24 fw5 light-blue-text">#{rank}</div>
         <div className="f14 fw5 text-6">
-          Given away to the trader with the top Relative P&L
+          {t('given-away-to-the-trader-with-the-top-relative-p-and-l')}
         </div>
       </div>
       <Col

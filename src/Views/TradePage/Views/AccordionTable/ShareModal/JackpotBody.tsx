@@ -10,6 +10,7 @@ import { Skeleton } from '@mui/material';
 import { Display } from '@Views/Common/Tooltips/Display';
 import { divide } from '@Utils/NumString/stringArithmatics';
 import { isABRouter } from '@Views/TradePage/config';
+import { useTranslation } from 'react-i18next';
 
 const BGImage = styled.div`
   background-image: url('/JackpotBG.png');
@@ -26,13 +27,13 @@ const JackpotBody: React.FC<{
   trade: (TradeType & { jackpotAmount: string }) | null;
 }> = ({ trade }) => {
   const ref = useRef(null);
-
+  const { t } = useTranslation();
   if (!trade?.market)
     return (
       <div className="flex flex-col text-1 text-f16">
-        Congrats you won the Jackpot!
+        {t('congrats-you-won-the-jackpot')}
         <div className="text-2 text-f14">
-          Fetching jackpot details, this may take a while.
+          {t('fetching-jackpot-details-this-may-take-a-while')}
         </div>
       </div>
     );
@@ -44,7 +45,7 @@ const JackpotBody: React.FC<{
       <div className="text-[#C3C2D4] w-[380px] b400:-translate-x-[4%]  h-[199px] b400:scale-[0.95] origin-center  ">
         <BGImage ref={ref}>
           <div className="font-[600]   mt-6 text-[#B1B6C6] text-f15 w-full text-center">
-            You won the Jackpot..
+            {t('you-won-the-jackpot')}
           </div>
           <div className="flex justify-between items-center mt-4">
             {trade ? (
@@ -52,8 +53,8 @@ const JackpotBody: React.FC<{
                 {token0}-{token1}{' '}
                 <UpDownChip
                   isUp={trade?.is_above}
-                  upText={isAb ? 'Above' : 'Up'}
-                  downText={isAb ? 'Below' : 'Down'}
+                  upText={isAb ? t('above') : t('up')}
+                  downText={isAb ? t('below') : t('down')}
                 />
               </div>
             ) : (
@@ -64,7 +65,7 @@ const JackpotBody: React.FC<{
             )}
             <div className="flex text-[24px] items-center font-[700]  text-[#fff] ">
               <span className="text-[16px] font-[500] text-[#B1B6C6]">
-                Bet:&nbsp;
+                {t('bet')}:&nbsp;
               </span>{' '}
               <Display
                 data={divide(trade.trade_size, 18)}

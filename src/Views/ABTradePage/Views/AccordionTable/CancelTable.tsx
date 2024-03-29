@@ -17,6 +17,7 @@ import {
   TableHeader,
 } from './Common';
 import { useNavigateToProfile } from './HistoryTable';
+import { useTranslation } from 'react-i18next';
 
 export const CancelledTable: React.FC<{
   trades: TradeType[] | undefined;
@@ -50,6 +51,7 @@ export const CancelledTable: React.FC<{
     strikePriceHeading = 'Strike';
     tradeSizeHeading = 'Size';
   }
+  const { t } = useTranslation();
   const headNameArray = platform
     ? [
         'Asset',
@@ -158,14 +160,14 @@ export const CancelledTable: React.FC<{
                   'text-f12 font-normal web:mr-2 tab:mx-2 text-[#C3C2D4]'
                 }
               >
-                Cancelled
+                {t('cancelled')}
               </span>
               <FailureIcon width={12} height={12} class />
             </div>
           </NumberTooltip>
         );
     }
-    return 'Unhandled Body';
+    return t('unhandled-body');
   };
 
   return (

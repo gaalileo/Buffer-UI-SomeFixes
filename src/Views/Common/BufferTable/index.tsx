@@ -12,6 +12,8 @@ import { ReactNode, useState } from 'react';
 import BasicPagination from '../pagination';
 import Background from './style';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 
 const BufferTableRow = ({ children, onClick, className }) => (
   <TableRow className={'table-row ' + className} onClick={onClick}>
@@ -143,6 +145,7 @@ const BufferTable: React.FC<IBufferTable> = ({
   accordianJSX,
   noHover = false,
 }) => {
+  const { t } = useTranslation();
   let rowClass = '';
   let tableCellCls = 'table-cell';
   if (smHeight) tableCellCls += ' sm';

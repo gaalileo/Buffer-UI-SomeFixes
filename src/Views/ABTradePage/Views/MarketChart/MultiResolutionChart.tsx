@@ -12,7 +12,7 @@ import {
   widget,
 } from '../../../../../public/static/charting_library';
 import { Markets, OHLCBlock, RealtimeUpdate } from './MakrketTypes';
-
+import { useTranslation } from 'react-i18next';
 import { formatDistanceCompact } from '@Hooks/Utilities/useStopWatch';
 import { priceAtom, silentPriceCache } from '@Hooks/usePrice';
 import { useUserAccount } from '@Hooks/useUserAccount';
@@ -66,6 +66,7 @@ import { getPnlForTrade } from '../BuyTrade/ActiveTrades/TradeDataView';
 import { loeditLoadingAtom } from '../EditModal';
 import { CHART_TVID } from 'src/App';
 import { selectedPriceAtom } from '@Views/AboveBelow/atoms';
+import { toLangKey } from '@Utils/langUtils';
 const PRICE_PROVIDER = 'Buffer Finance';
 export let supported_resolutions = [
   // '1S' as ResolutionString,
@@ -203,11 +204,12 @@ const defaults = {
   red: 'rgb(255, 104, 104)',
 };
 function getText(option: TradeType) {
+  const { t } = useTranslation();
   const expiration = option.expiration_time!;
   const curr = Math.round(Date.now() / 1000);
   return `${
     expiration <= curr
-      ? 'Processing...'
+    ? t('processing')
       : `${formatDistanceCompact(
           Variables(expiration - Math.round(Date.now() / 1000))
         )}`
@@ -279,7 +281,8 @@ const formatMarketOrder = (option: TradeType, earlyCloseData: any) => {
   );
 };
 const formatLOText = (option: TradeType, decimals) => {
-  return `Limit | ${toFixed(
+  const { t } = useTranslation();
+  return `${t('limit')} | ${toFixed(
     divide(option.trade_size?.toString(), decimals)!,
     2
   )} ${option.token} | ${
@@ -299,6 +302,7 @@ function drawPosition(
   priceCache: any,
   spread: number
 ) {
+  const { t } = useTranslation();
   const strike = getStrike(option, priceCache, spread).strikePrice;
   // const idx = visualized.indexOf(option.queue_id);
   // console.log(strike, 'drawStrike');
@@ -310,7 +314,7 @@ function drawPosition(
     const text = ``;
     const processing =
       option.pending_operation == 'Processing EDIT'
-        ? 'Modifying Limit Order'
+        ? t('modifying-limit-order')
         : null;
     // console.log(
     //   `MultiResolutionChart-processing: `,
@@ -322,7 +326,7 @@ function drawPosition(
     return chart
       ?.createOrderLine()
       .setText(processing || formatLOText(option, decimals))
-      .setTooltip('drag to change strike')
+      .setTooltip(t('drag-to-change-strike'))
       .setBodyBackgroundColor(defaults.BG)
       .setQuantityBorderColor(defaults.BG)
       .setQuantityBackgroundColor(color)
@@ -332,21 +336,21 @@ function drawPosition(
       .setBodyFont('semibold 17pt Arial')
       .setQuantityFont('bold 17pt Arial')
       .setBodyTextColor('rgb(195,194,212)')
-      .setCancelTooltip('click to cancel this limit order')
+      .setCancelTooltip(t('click-to-cancel-this-limit-order'))
       .setQuantity('↕')
       .setBodyBorderColor(defaults.BG)
       .setLineColor(color)
       .onMove('move', function () {
-        this.setText('Processing EDIT');
+        this.setText(t('processing-edit'));
         // console.log(`MultiResolutionChart-Processing EDIT: `);
         loHandlers.onMove(option, this.getPrice());
       })
-      .setModifyTooltip('click to edit order')
+      .setModifyTooltip(t('click-to-edit-order'))
       .onModify('modify', function () {
         loHandlers.onEdit({ trade: option, market: option.market });
       })
       .onCancel('modify', function () {
-        this.setText('Processing CANCEL');
+        this.setText(t('processing-cancel'));
 
         loHandlers.onCancel(option);
       })
@@ -383,7 +387,7 @@ function drawPosition(
     .setLineColor(color)
     .setBodyTextColor(winning ? defaults.green : 'rgb(195,194,212)')
     .setQuantity(option.is_above ? defaults.upIcon : defaults.downIcon)
-    .setCancelTooltip('click to early close at market price')
+    .setCancelTooltip(t('click-to-early-close-at-market-price'))
     .setPrice(optionPrice);
 }
 
@@ -397,6 +401,7 @@ export const MultiResolutionChart = ({
 
   isMobile?: boolean;
 }) => {
+  const { t } = useTranslation();
   const { earlyCloseHandler } = useCancelTradeFunction();
   const market = marke.replace('-', '');
   const chartData =
@@ -451,7 +456,7 @@ export const MultiResolutionChart = ({
               singleAsset.token1,
             full_name: singleAsset.tv_id,
             description: singleAsset.tv_id,
-            exchange: PRICE_PROVIDER,
+            exchange: t(toLangKey(PRICE_PROVIDER)),
             type: singleAsset.category,
             pricescale: singleAsset.price_precision,
             pair: singleAsset.pair,
@@ -477,7 +482,11 @@ export const MultiResolutionChart = ({
   const datafeed: IBasicDataFeed = useMemo(() => {
     return {
       onReady: (callback) => {
-        setTimeout(() => callback(defaults.confgis));
+        setTimeout(() => callback({
+          value: t(toLangKey(defaults.confgis.value)),
+          name: t(toLangKey(defaults.confgis.name)),
+          desc: t(toLangKey(defaults.confgis.desc)),
+        }));
       },
       searchSymbols: async (
         userInput,
@@ -533,7 +542,7 @@ export const MultiResolutionChart = ({
           volume_precision: 2,
           data_status: 'streaming',
           timezone: getOslonTimezone() as Timezone,
-          listed_exchange: PRICE_PROVIDER,
+          listed_exchange: t(toLangKey(PRICE_PROVIDER)),
           format: 'price' as SeriesFormat,
         };
 
@@ -761,31 +770,31 @@ export const MultiResolutionChart = ({
           {
             text: '1D',
             resolution: '30' as ResolutionString,
-            description: '1 Day look back',
+            description: `1 ${t('day-look-back')}`,
             title: '1D',
           },
           {
             text: '4H',
             resolution: '5' as ResolutionString,
-            description: '4 Hour look back',
+            description: `4 ${t('hour-look-back')}`,
             title: '4H',
           },
           {
             text: '1H',
             resolution: '1' as ResolutionString,
-            description: '1 Hour look back',
+            description: `1 ${t('hour-look-back')}`,
             title: '1H',
           },
           {
             text: '30',
             resolution: '1' as ResolutionString,
-            description: '30 Minute look back',
+            description: `30 ${t('minute-look-back')}`,
             title: '30Min',
           },
           {
             text: '10',
             resolution: '1S' as ResolutionString,
-            description: '10 Minute look back',
+            description: `10 ${t('minute-look-back')}`,
             title: '10Min',
           },
         ],
@@ -1032,7 +1041,7 @@ export const MultiResolutionChart = ({
       {!isMobile ? (
         <div className="items-center justify-between flex-row flex  bg-2 w-full tv-h px-4 ">
           <div className="flex flex-row justify-start font-[500]">
-            <div className="ele cursor-pointer">Time</div>
+            <div className="ele cursor-pointer">{t('time')}</div>
             {supported_resolutions.map((s) => {
               return (
                 <div
@@ -1068,7 +1077,7 @@ export const MultiResolutionChart = ({
               onClick={toggleIndicatorDD}
               className="flex flex-row mr-3 ele text-f12  font-[500] "
             >
-              <ChartElementSVG className="mr-[3px]" /> Indicators
+              <ChartElementSVG className="mr-[3px]" /> {t('indicators')}
             </button>
           </div>
         </div>

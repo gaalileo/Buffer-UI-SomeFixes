@@ -25,17 +25,19 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { ReactNode } from 'react';
 import { getPayout } from '../../Views/AccordionTable/ShareModal/utils';
 import { activeTabAtom } from './TradeLog_sm';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 
 const valueClasssName = '!text-[#C3C2D4] !text-f14 !ml-auto !justify-end';
 const keyClassName = '!text-[#808191] !text-f14';
 const TradeInspect_sm: React.FC<any> = ({}) => {
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useAtom(activeTabAtom);
   const { trade } = useAtomValue(tradeInspectMobileAtom);
   const setInspectedTrade = useSetAtom(tradeInspectMobileAtom);
   const { getPoolInfo } = usePoolInfo();
   const { data: allSpreads } = useSpread();
   if (!trade) return <div>Error loading data</div>;
-
   const spread = allSpreads?.[trade.market.tv_id].spread ?? 0;
 
   const poolInfo = getPoolInfo(trade.pool.pool);
@@ -64,7 +66,7 @@ const TradeInspect_sm: React.FC<any> = ({}) => {
   const ExpiryPrice = {
     key: 'Expiry Price',
     value: !expiryPrice ? (
-      'Fetching..'
+      t('fetching-0')
     ) : (
       <Display
         className={valueClasssName}
@@ -126,7 +128,7 @@ const TradeInspect_sm: React.FC<any> = ({}) => {
                     ` ${status.textColor}`
                   }
                 >
-                  {status.chip}
+                  {t(toLangKey(status.chip))}
                 </div>
 
                 {status.icon}
@@ -149,7 +151,7 @@ const TradeInspect_sm: React.FC<any> = ({}) => {
         </div>
       </div>
       <div className="mx-3">
-        <Head>Net PnL</Head>
+        <Head>{t('net-pnl')}</Head>
         <Display
           label={status.chip == 'Win' ? '+' : ''}
           className={
@@ -161,7 +163,7 @@ const TradeInspect_sm: React.FC<any> = ({}) => {
       </div>
       <div className="flex gap-x-6 mx-3">
         <div>
-          <Head className="!text-f12">Trade Size</Head>
+          <Head className="!text-f12">{t('trade-size')}</Head>
           <Display
             data={divide(trade.trade_size, poolInfo.decimals)}
             className="!justify-start !text-f14  text-[#C3C2D4]"
@@ -169,7 +171,7 @@ const TradeInspect_sm: React.FC<any> = ({}) => {
           />
         </div>
         <div>
-          <Head className="!text-f12">Trade Strike</Head>
+          <Head className="!text-f12">{t('trade-strike')}</Head>
           <StrikePriceComponent
             className={'!text-f14  text-[#C3C2D4]'}
             trade={trade}

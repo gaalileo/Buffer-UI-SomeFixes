@@ -5,5 +5,5 @@
  * @returns key of given string
  */
 export function toLangKey(input: string): string {
-  return input.toLowerCase().replace(/\s+/g, '-');
+  return input?.toLowerCase()?.replace(/\s+/g, '-') ?? "";
 }

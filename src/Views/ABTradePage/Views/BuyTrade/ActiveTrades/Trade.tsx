@@ -21,6 +21,7 @@ import { TradeDataView } from './TradeDataView';
 import { TradePoolChip } from './TradePoolChip';
 import { TradeTimeElapsed } from './TradeTimeElapsed';
 import { TradeTypeChip } from './TradeTypeChip';
+import { useTranslation } from 'react-i18next';
 
 const TradeCardBackground = styled.div`
   padding: 12px 16px;
@@ -29,13 +30,13 @@ const TradeCardBackground = styled.div`
   margin-top: 8px;
 `;
 
-export const TradeCard = ({ trade }: { trade: TradeType }) => {
+export const TradeCard = ({ trade }: { trade: TradeType; }) => {
   const { getPoolInfo } = usePoolInfo();
   const tradeMarket = trade.market;
   const cachedPrices = useAtomValue(queuets2priceAtom);
   const { data: allSpreads } = useSpread();
   const spread = allSpreads?.[trade.market.tv_id].spread ?? 0;
-
+  const { t } = useTranslation();
   const { isPriceArrived } = getStrike(trade, cachedPrices, spread);
   // console.log('timerTrade', trade, expiry);
   const isQueued = trade.state === TradeState.Queued && !isPriceArrived;
@@ -61,7 +62,7 @@ export const TradeCard = ({ trade }: { trade: TradeType }) => {
             {!isLimitorder && (
               <>
                 {isQueued ? (
-                  <NumberTooltip content={'Fetching latest states...'}>
+                  <NumberTooltip content={t('fetching-latest-states')}>
                     <img
                       src="/Gear.png"
                       className="w-[16px] h-[16px] animate-spin"
@@ -94,7 +95,7 @@ export const TradeCard = ({ trade }: { trade: TradeType }) => {
   );
 };
 
-const TimerChip = ({ trade }: { trade: TradeType }) => {
+const TimerChip = ({ trade }: { trade: TradeType; }) => {
   const isLimitOrder = trade.is_limit_order;
   // const expiry = getExpiry(trade);
 

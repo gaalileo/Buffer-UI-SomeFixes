@@ -22,6 +22,7 @@ import {
 } from '../../AccordionTable/Common';
 import { loeditLoadingAtom } from '../../EditModal';
 import { useEarlyPnl } from './TradeDataView';
+import { useTranslation } from 'react-i18next';
 
 export const TradeActionButton: React.FC<{
   trade: TradeType;
@@ -46,7 +47,7 @@ export const TradeButton: React.FC<{
   const { viewOnlyMode } = useUserAccount();
   const { data: allSpreads } = useSpread();
   const spread = allSpreads?.[trade.market.tv_id].spread ?? 0;
-
+  const { t } = useTranslation();
   const { isPriceArrived } = getStrike(trade, cachedPrices, spread);
   const earlyCloseLoading = useAtomValue(closeLoadingAtom);
 
@@ -78,8 +79,6 @@ export const TradeButton: React.FC<{
     cancelHandler(trade);
   }
 
-  f;
-
   if (viewOnlyMode) return <></>;
 
   const [isCloseDisabled, disableTooltip] = getEarlyCloseStatus(trade);
@@ -90,9 +89,9 @@ export const TradeButton: React.FC<{
         <CloseAtProfitButton
           onClick={() =>
             isCancelLoading ||
-            isEarlyCloseLoading ||
-            isTradeExpired ||
-            isCloseDisabled
+              isEarlyCloseLoading ||
+              isTradeExpired ||
+              isCloseDisabled
               ? console.log()
               : earlyClose()
           }
@@ -104,14 +103,14 @@ export const TradeButton: React.FC<{
           }
         >
           {isTradeExpired ? (
-            'Processing...'
+            t('processing')
           ) : isEarlyCloseLoading ? (
             <CircularProgress
               className="!w-[15px] !h-[15px] mx-[20px]"
               color="inherit"
             />
           ) : (
-            `Close at +${toFixed(earlycloseAmount, 2)}`
+                `${t('close-at')} +${toFixed(earlycloseAmount, 2)}`
           )}
         </CloseAtProfitButton>
       </>
@@ -129,22 +128,22 @@ export const TradeButton: React.FC<{
           }
           onClick={() =>
             isCancelLoading ||
-            isEarlyCloseLoading ||
-            isTradeExpired ||
-            isCloseDisabled
+              isEarlyCloseLoading ||
+              isTradeExpired ||
+              isCloseDisabled
               ? console.log()
               : earlyClose()
           }
         >
           {isTradeExpired ? (
-            'Processing...'
+            t('processing')
           ) : isEarlyCloseLoading ? (
             <CircularProgress
               className="!w-[15px] !h-[15px] mx-[20px]"
               color="inherit"
             />
           ) : (
-            `Close at ${toFixed(earlycloseAmount, 2)}`
+                `${t('close-at')} ${toFixed(earlycloseAmount, 2)}`
           )}
         </CloseAtLossButton>
       </span>

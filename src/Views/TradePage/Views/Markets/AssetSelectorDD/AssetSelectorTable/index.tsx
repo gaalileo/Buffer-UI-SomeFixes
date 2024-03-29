@@ -28,6 +28,7 @@ import { useMemo } from 'react';
 import { getAddress } from 'viem';
 import { CloseTag } from './CloseTag';
 import { OneDayChange } from './OneDayChange';
+import { useTranslation } from 'react-i18next';
 
 export const AssetSelectorTable: React.FC<{
   group?: string;
@@ -43,6 +44,7 @@ export const AssetSelectorTable: React.FC<{
   const setForexTimingsModal = useSetAtom(ForexTimingsModalAtom);
   const { getPoolInfo } = usePoolInfo();
   const readcallData = useAtomValue(buyTradeDataAtom);
+  const { t } = useTranslation();
 
   const headers = useMemo(() => {
     return [
@@ -159,7 +161,7 @@ export const AssetSelectorTable: React.FC<{
                     })
                   }
                 >
-                  Schedule
+                  {t('schedule')}
                 </ShowTimingModalButton>
               )}
             </ColumnGap>
@@ -236,7 +238,7 @@ export const AssetSelectorTable: React.FC<{
         );
 
       default:
-        return <div>Unhandled Column.</div>;
+        return <div>{t('unhandled-column')}</div>;
     }
   };
 

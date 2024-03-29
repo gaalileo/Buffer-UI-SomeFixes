@@ -2,17 +2,20 @@ import FailedSuccessIcon from '@Assets/Elements/FailedSuccess';
 import SuccessIcon from '@Assets/Elements/SuccessIcon';
 import FailureIcon from '@SVG/Elements/FailureIcon';
 import { divide, gt, subtract } from '@Utils/NumString/stringArithmatics';
+import { toLangKey } from '@Utils/langUtils';
 import { BetState } from '@Views/AboveBelow/Hooks/useAheadTrades';
 import {
   IGQLHistory,
   expiryPriceCache,
 } from '@Views/AboveBelow/Hooks/usePastTradeQuery';
 import NumberTooltip from '@Views/Common/Tooltips';
+import { useTranslation } from 'react-i18next';
 
 export const PayoutChip: React.FC<{
   data: IGQLHistory;
   className?: string;
 }> = ({ data, className = '' }) => {
+  const { t } = useTranslation();
   const net_pnl = data.payout
     ? divide(subtract(data.payout, (data.totalFee ?? '0') as string), 18)
     : divide(subtract('0', (data.totalFee ?? '0') as string), 18);
@@ -35,8 +38,8 @@ export const PayoutChip: React.FC<{
   function getChipContent() {
     if (isPending && !betExpiryPrice) {
       return {
-        tooltip: 'Fetching latest states.',
-        chip: 'Fetching State',
+        tooltip: t('fetching-latest-states-0'),
+        chip: t('fetching-state'),
         icon: (
           <img src="/Gear.png" className="transition-transform animate-spin" />
         ),
@@ -45,8 +48,8 @@ export const PayoutChip: React.FC<{
     }
     if (isQueued)
       return {
-        tooltip: 'The trade is queued.',
-        chip: 'Queued',
+        tooltip: t('the-trade-is-queued'),
+        chip: t('queued'),
         icon: (
           <img src="/Gear.png" className="transition-transform animate-spin" />
         ),
@@ -54,16 +57,16 @@ export const PayoutChip: React.FC<{
       };
     if (isCancelled)
       return {
-        tooltip: 'The trade is cancelled',
-        chip: 'Cancelled',
+        tooltip: t('the-trade-is-cancelled'),
+        chip: t('cancelled'),
         icon: <FailureIcon width={14} height={14} />,
         textColor: 'text-3',
       };
     if (isWin) {
       if (isPending)
         return {
-          tooltip: 'You won the trade. Transfering the amount...',
-          chip: 'Processing',
+          tooltip: t('you-won-the-trade-transfering-the-amount'),
+          chip: t('processing-1'),
           icon: (
             <img
               src="/Gear.png"
@@ -74,15 +77,15 @@ export const PayoutChip: React.FC<{
         };
       else
         return {
-          tooltip: 'You won this bet!',
-          chip: 'Win',
+          tooltip: t('you-won-this-bet'),
+          chip: t('win'),
           icon: <SuccessIcon width={14} height={14} />,
           textColor: 'text-green',
         };
     } else
       return {
-        tooltip: 'You lost this trade!',
-        chip: 'Loss',
+        tooltip: t('you-lost-this-trade'),
+        chip: t('loss'),
         icon: <FailedSuccessIcon width={14} height={14} />,
         textColor: 'text-red',
       };

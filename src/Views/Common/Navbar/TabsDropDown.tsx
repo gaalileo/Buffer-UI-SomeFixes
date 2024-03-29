@@ -1,8 +1,10 @@
+import { toLangKey } from '@Utils/langUtils';
 import { ArrowDropDownRounded } from '@mui/icons-material';
 import { ClickAwayListener } from '@mui/material';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ITab } from 'src/Config/getTabs';
+import { useTranslation } from 'react-i18next';
 
 export const TabsDropdown = ({
   tabs,
@@ -12,6 +14,7 @@ export const TabsDropdown = ({
   defaultName: string;
 }) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   return (
     <div>
       <ClickAwayListener
@@ -21,18 +24,16 @@ export const TabsDropdown = ({
       >
         <div className="z-[1] relative rounded-1">
           <button
-            className={`transition-all duration-300 text-4 text-f15  pl-4 pr-1 py-[4px] rounded-[8px] flex items-center ${
-              open
-                ? 'bg-3 text-1'
-                : 'hover:bg-1 hover:text-1 hover:brightness-125'
-            } `}
+            className={`transition-all duration-300 text-4 text-f15  pl-4 pr-1 py-[4px] rounded-[8px] flex items-center ${open
+              ? 'bg-3 text-1'
+              : 'hover:bg-1 hover:text-1 hover:brightness-125'
+              } `}
             onClick={() => setOpen(!open)}
           >
-            {defaultName}
+            {t(toLangKey(defaultName))}
             <ArrowDropDownRounded
-              className={`transition-transform duration-200 ease-out dropdown-arrow ${
-                open ? 'origin rotate-180' : ''
-              }`}
+              className={`transition-transform duration-200 ease-out dropdown-arrow ${open ? 'origin rotate-180' : ''
+                }`}
             />
           </button>
 
@@ -56,7 +57,7 @@ export const TabsDropdown = ({
                             <tab.Img />
                           </div>
                         )}
-                        {tab.name}
+                        {t(toLangKey(tab.name))}
                       </div>
                     </button>
                   );
@@ -67,15 +68,14 @@ export const TabsDropdown = ({
                     key={tab.name}
                     to={tab.to}
                     className={({ isActive }) =>
-                      `!h-fit py-3 text-4 text-f15 hover:text-1 ${
-                        isActive ? ' text-1' : ''
+                      `!h-fit py-3 text-4 text-f15 hover:text-1 ${isActive ? ' text-1' : ''
                       } `
                     }
                     onClick={() => {
                       setOpen(false);
                     }}
                   >
-                    <div className="flex items-center">{tab.name}</div>
+                    <div className="flex items-center">{t(toLangKey(tab.name))}</div>
                   </NavLink>
                 );
               })}
