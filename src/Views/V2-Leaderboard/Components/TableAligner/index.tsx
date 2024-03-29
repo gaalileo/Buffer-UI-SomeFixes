@@ -7,6 +7,8 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material';
+import { toLangKey } from '@Utils/langUtils';
+import { useTranslation } from 'react-i18next';
 
 interface ITableAligner {
   keysName: any[];
@@ -26,6 +28,7 @@ export const TableAligner: React.FC<ITableAligner> = ({
   getClassName,
 }) => {
   // console.log(`index-keyStyle: `, keyStyle);
+  const { t } = useTranslation();
   return (
     <TableAlignerStyles className={className}>
       <Table>
@@ -44,11 +47,10 @@ export const TableAligner: React.FC<ITableAligner> = ({
                   return (
                     <TableCell
                       key={`${colIdx}:${rowIdx}`}
-                      className={`${
-                        col === 0 ? keyStyle : valueStyle
-                      } table-cell `}
+                      className={`${col === 0 ? keyStyle : valueStyle
+                        } table-cell `}
                     >
-                      {col === 0 ? keysName[rowIdx] : values[rowIdx]}
+                      {col === 0 ? t(toLangKey(keysName[rowIdx])) : values[rowIdx]}
                     </TableCell>
                   );
                 })}

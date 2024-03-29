@@ -38,6 +38,8 @@ import { getPayout } from './ShareModal/utils';
 import { getJackpotKey, useJackpotManager } from 'src/atoms/JackpotState';
 import { useJackpotInfo } from '@Views/Jackpot/useJackpotInfo';
 import { JackpotChip } from '@Views/Jackpot/JackpotChip';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 
 enum TableColumn {
   Asset = 0,
@@ -74,7 +76,7 @@ const HistoryTable: React.FC<{
   overflow = true,
 }) => {
   const { getPoolInfo } = usePoolInfo();
-
+  const { t } = useTranslation();
   const headNameArray = platform
     ? [
         'Asset',
@@ -135,13 +137,13 @@ const HistoryTable: React.FC<{
 
     const status = gt(pnl?.toString(), '0')
       ? {
-          tooltip: 'You won this bet!',
+          tooltip: t('you-won-this-bet'),
           chip: 'Win',
           icon: <SuccessIcon width={14} height={14} />,
           textColor: 'text-green',
         }
-      : {
-          tooltip: 'You lost this trade!',
+        : {
+          tooltip: t('you-lost-this-trade'),
           chip: 'Loss',
           icon: <FailedSuccess width={14} height={14} />,
           textColor: 'text-red',
@@ -156,158 +158,157 @@ const HistoryTable: React.FC<{
             currentRow={trade}
             split={isMobile}
             // platform={platform}
-          />
-        );
-      case TableColumn.ExpiryPrice:
-        if (!expiryPrice) return 'Fetching...';
-        return (
-          <Display
-            className="!justify-start"
-            data={divide(expiryPrice, 8)}
-            precision={trade.market.price_precision.toString().length - 1}
-          />
-        );
-      case TableColumn.OpenTime:
-        return (
-          queuedTradeFallBack(trade) || (
-            <DisplayTime ts={trade.open_timestamp} />
-          )
-        );
-      case TableColumn.TimeLeft:
-        return (
-          queuedTradeFallBack(trade, true) || (
-            <div>
-              {formatDistance(Variables(minClosingTime - trade.open_timestamp))}
-            </div>
-          )
-        );
-      case TableColumn.CloseTime:
-        return (
-          queuedTradeFallBack(trade) || <DisplayTime ts={minClosingTime} />
-        );
-      case TableColumn.TradeSize:
-        if (!isNotMobile) {
-          return (
-            <div className={'flex items-center'}>
-              <Display
-                data={divide(trade.trade_size, poolInfo.decimals)}
-                className="!justify-start"
-                // unit={poolInfo.token}
-              />{' '}
-              <img
-                src={getAssetImageUrl(trade.token)}
-                width={13}
-                height={13}
-                className="inline ml-2"
-              />
-            </div>
+            />
           );
-        }
-        return (
-          <Display
-            data={divide(trade.trade_size, poolInfo.decimals)}
-            className="!justify-start"
-            unit={poolInfo.token}
-          />
-        );
-      case TableColumn.Payout:
-        if (!expiryPrice) return 'Processing...';
-        if (isNotMobile)
+        case TableColumn.ExpiryPrice:
+          if (!expiryPrice) return t('fetching');
           return (
-            <div>
-              {pnl || payout ? (
-                <>
-                  {' '}
-                  <div className="flex items-center gap-2">
-                    <Display
-                      className="!justify-start"
-                      data={divide(payout!, poolInfo.decimals)}
-                      unit={poolInfo.token}
-                    />
-                    <JackpotChip jackpote18={jackpote18} />
-                  </div>
-                  <span className={status.textColor + ' flex '}>
-                    Net Pnl :{' '}
-                    <Display
-                      label={status.chip == 'Win' ? '+' : ''}
-                      className="!justify-start"
-                      data={pnl}
-                      unit={poolInfo.token}
-                    />
-                  </span>
-                </>
-              ) : (
-                'Calculating..'
-              )}
-            </div>
+            <Display
+              className="!justify-start"
+              data={divide(expiryPrice, 8)}
+              precision={trade.market.price_precision.toString().length - 1}
+            />
           );
-        else
+        case TableColumn.OpenTime:
           return (
-            <div className="flex items-center gap-2 flex-col">
-              <Display
-                label={status.chip == 'Win' ? '+' : ''}
-                className={`!justify-start ${
-                  gte(pnl?.toString(), '0') ? 'green' : 'red'
-                }`}
-                data={divide(payout ?? '0', poolInfo.decimals)}
-                unit={poolInfo.token}
-              />
-              <JackpotChip jackpote18={jackpote18} />
-            </div>
+            queuedTradeFallBack(trade) || (
+              <DisplayTime ts={trade.open_timestamp} />
+            )
           );
-      case TableColumn.Status:
-        if (!expiryPrice) return 'Processing...';
-
-        return (
-          <NumberTooltip content={status.tooltip}>
-            <div
-              className={`flex ${status.textColor} sm:flex-row-reverse items-center justify-between w-max px-2   rounded-[5px] bg-[#282B39]`}
-            >
-              <div
-                className={
-                  'text-f13 font-normal web:mr-2 tab:mx-2' +
-                  ` ${status.textColor}`
-                }
-              >
-                {status.chip}
+        case TableColumn.TimeLeft:
+          return (
+            queuedTradeFallBack(trade, true) || (
+              <div>
+                {formatDistance(Variables(minClosingTime - trade.open_timestamp))}
               </div>
-
-              {status.icon}
-            </div>
-          </NumberTooltip>
-        );
-      case TableColumn.ShareOrAddress:
-        if (platform)
-          return (
-            <div className="flex items-center">
-              {getSlicedUserAddress(trade.user_address, 4)}
-              {!isNotMobile && (
-                <div
-                  role="button"
-                  onClick={() => {
-                    const userAddress = trade.user_address;
-                    if (!userAddress) return;
-                    navigateToProfile(userAddress.toLowerCase());
-                  }}
-                >
-                  <Launch className="scale-75 mb-1" />
-                </div>
-              )}
-            </div>
+            )
           );
-        return <Share data={trade} market={trade.market} poolInfo={poolInfo} />;
-    }
-    return 'Unhandled Body';
+        case TableColumn.CloseTime:
+          return (
+            queuedTradeFallBack(trade) || <DisplayTime ts={minClosingTime} />
+          );
+        case TableColumn.TradeSize:
+          if (!isNotMobile) {
+            return (
+              <div className={'flex items-center'}>
+                <Display
+                  data={divide(trade.trade_size, poolInfo.decimals)}
+                  className="!justify-start"
+                // unit={poolInfo.token}
+                />{' '}
+                <img
+                  src={getAssetImageUrl(trade.token)}
+                  width={13}
+                  height={13}
+                  className="inline ml-2"
+                />
+              </div>
+            );
+          }
+          return (
+            <Display
+              data={divide(trade.trade_size, poolInfo.decimals)}
+              className="!justify-start"
+              unit={poolInfo.token}
+            />
+          );
+        case TableColumn.Payout:
+          if (!expiryPrice) return t('processing');
+          if (isNotMobile)
+            return (
+              <div>
+                {pnl || payout ? (
+                  <>
+                    {' '}
+                    <div className="flex items-center gap-2">
+                      <Display
+                        className="!justify-start"
+                        data={divide(payout!, poolInfo.decimals)}
+                        unit={poolInfo.token}
+                      />
+                      <JackpotChip jackpote18={jackpote18} />
+                    </div>
+                    <span className={status.textColor + ' flex '}>
+                      Net Pnl :{' '}
+                      <Display
+                        label={status.chip == 'Win' ? '+' : ''}
+                        className="!justify-start"
+                        data={pnl}
+                        unit={poolInfo.token}
+                      />
+                    </span>
+                  </>
+                ) : (
+                  t('calculating')
+                )}
+              </div>
+            );
+          else
+            return (
+              <div className="flex items-center gap-2 flex-col">
+                <Display
+                  label={status.chip == 'Win' ? '+' : ''}
+                  className={`!justify-start ${gte(pnl?.toString(), '0') ? 'green' : 'red'
+                    }`}
+                  data={divide(payout ?? '0', poolInfo.decimals)}
+                  unit={poolInfo.token}
+                />
+                <JackpotChip jackpote18={jackpote18} />
+              </div>
+            );
+        case TableColumn.Status:
+          if (!expiryPrice) return t('processing');
+
+          return (
+            <NumberTooltip content={status.tooltip}>
+              <div
+                className={`flex ${status.textColor} sm:flex-row-reverse items-center justify-between w-max px-2   rounded-[5px] bg-[#282B39]`}
+              >
+                <div
+                  className={
+                    'text-f13 font-normal web:mr-2 tab:mx-2' +
+                    ` ${status.textColor}`
+                  }
+                >
+                  {status.chip}
+                </div>
+
+                {status.icon}
+              </div>
+            </NumberTooltip>
+          );
+        case TableColumn.ShareOrAddress:
+          if (platform)
+            return (
+              <div className="flex items-center">
+                {getSlicedUserAddress(trade.user_address, 4)}
+                {!isNotMobile && (
+                  <div
+                    role="button"
+                    onClick={() => {
+                      const userAddress = trade.user_address;
+                      if (!userAddress) return;
+                      navigateToProfile(userAddress.toLowerCase());
+                    }}
+                  >
+                    <Launch className="scale-75 mb-1" />
+                  </div>
+                )}
+              </div>
+            );
+          return <Share data={trade} market={trade.market} poolInfo={poolInfo} />;
+      }
+    return t('unhandled-body');
   };
 
   const Accordian = (row: number) => {
     const trade = trades?.[row];
 
-    if (!trade) return <>Something went wrong.</>;
+    if (!trade) return <>t('something-went-wrong')</>;
     // if (!readcallData) return <></>;
 
     const poolInfo = getPoolInfo(trade?.pool?.pool);
-    if (!poolInfo) return <>Something went wrong.</>;
+    if (!poolInfo) return <>t('something-went-wrong')</>;
     const minClosingTime = getExpiry(trade);
     let expiryPrice: number | null = trade.expiry_price;
     if (!expiryPrice) {
@@ -342,65 +343,65 @@ const HistoryTable: React.FC<{
           <div className={dateClass}>{getDisplayDate(minClosingTime)}</div>
         </RowBetween>
 
-        {platform ? (
-          <RowBetween className="mt-5">
-            <ColumnGap gap="3px">
-              <div className={headerClass}>Strike</div>
-              <StrikePriceComponent
-                trade={trade}
-                spread={0}
-                className={descClass}
-              />
-            </ColumnGap>
-            <ColumnGap gap="3px">
-              <div className={headerClass}>Expiry</div>
-              <div className={descClass}>
-                {expiryPrice
-                  ? numberWithCommas(
-                      toFixed(
-                        divide(expiryPrice, 8) as string,
-                        trade.market.price_precision.toString().length - 1
-                      )
-                    )
-                  : 'Processing...'}
-              </div>
-            </ColumnGap>
-            <ColumnGap gap="3px">
-              <div className={headerClass}>Profit</div>
-              <div className={descClass}>
-                {expiryPrice
-                  ? numberWithCommas(toFixed(pnl, 2))
-                  : 'Calculating...'}
-                <img
-                  src={getAssetImageUrl(trade.token)}
-                  width={13}
-                  height={13}
-                  className="inline ml-1"
+          {platform ? (
+            <RowBetween className="mt-5">
+              <ColumnGap gap="3px">
+                <div className={headerClass}>{t(toLangKey("Strike"))}</div>
+                <StrikePriceComponent
+                  trade={trade}
+                  spread={0}
+                  className={descClass}
                 />
-              </div>
-            </ColumnGap>
-          </RowBetween>
-        ) : (
-          <RowBetween className="mt-5">
-            <div>
-              <span className={headerClass + ' mr-3'}>Expiry</span>
-              <span className={descClass}>
-                {expiryPrice
-                  ? numberWithCommas(
+              </ColumnGap>
+              <ColumnGap gap="3px">
+                <div className={headerClass}>{t(toLangKey("Expiry"))}</div>
+                <div className={descClass}>
+                  {expiryPrice
+                    ? numberWithCommas(
                       toFixed(
                         divide(expiryPrice, 8) as string,
                         trade.market.price_precision.toString().length - 1
                       )
                     )
-                  : 'Processing...'}
-              </span>
-            </div>
-            <div className="flex items-center">
-              <span className={headerClass + ' mr-3'}>Profit</span>
-              <span className={descClass}>
-                {expiryPrice
-                  ? numberWithCommas(toFixed(pnl, 2))
-                  : 'Calculating...'}
+                    : t('processing')}
+                </div>
+              </ColumnGap>
+              <ColumnGap gap="3px">
+                <div className={headerClass}>{t(toLangKey("Profit"))}</div>
+                <div className={descClass}>
+                  {expiryPrice
+                    ? numberWithCommas(toFixed(pnl, 2))
+                    : t('calculating-0')}
+                  <img
+                    src={getAssetImageUrl(trade.token)}
+                    width={13}
+                    height={13}
+                    className="inline ml-1"
+                  />
+                </div>
+              </ColumnGap>
+            </RowBetween>
+          ) : (
+            <RowBetween className="mt-5">
+              <div>
+                  <span className={headerClass + ' mr-3'}>{t(toLangKey("Expiry"))}</span>
+                  <span className={descClass}>
+                    {expiryPrice
+                      ? numberWithCommas(
+                      toFixed(
+                        divide(expiryPrice, 8) as string,
+                        trade.market.price_precision.toString().length - 1
+                      )
+                    )
+                      : t('processing')}
+                  </span>
+                </div>
+                <div className="flex items-center">
+                  <span className={headerClass + ' mr-3'}>{t(toLangKey("Profit"))}</span>
+                  <span className={descClass}>
+                    {expiryPrice
+                      ? numberWithCommas(toFixed(pnl, 2))
+                  : t('calculating-0')}
               </span>
               <img
                 src={getAssetImageUrl(trade.token)}
@@ -444,15 +445,15 @@ const HistoryTable: React.FC<{
         // else setInspectTrade({ trade: trades?.[idx] });
       }}
       showOnly={onlyView}
-      error={<TableErrorRow msg="No Trade History." />}
-      loading={isLoading}
-      className={className}
-      overflow={overflow}
-      accordianJSX={isNotMobile ? undefined : Accordian}
-      doubleHeight={!isNotMobile}
-    />
-  );
-};
+        error={<TableErrorRow msg={t('no-trade-history')} />}
+        loading={isLoading}
+        className={className}
+        overflow={overflow}
+        accordianJSX={isNotMobile ? undefined : Accordian}
+        doubleHeight={!isNotMobile}
+      />
+    );
+  };
 export { HistoryTable };
 
 export const useNavigateToProfile = () => {

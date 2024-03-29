@@ -13,6 +13,7 @@ import { useWeeklyLeaderboardQuery } from '@Views/V2-Leaderboard/Hooks/useWeekly
 import styled from '@emotion/styled';
 import { Launch } from '@mui/icons-material';
 import { useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { getChains } from 'src/Config/wagmiClient';
 import { Chain } from 'wagmi';
@@ -29,6 +30,7 @@ export const UserDataV2 = () => {
   const { activeChain } = useActiveChain();
   const chains: Chain[] = getChains();
   const navigateToTrade = useNavigateToTrade();
+  const { t } = useTranslation();
 
   const activeChainExplorer = useMemo(() => {
     const chain: Chain | undefined = chains.find(
@@ -102,7 +104,7 @@ export const UserDataV2 = () => {
                 <Launch className="scale-125 mt-1" />
               </a>
             ) : (
-              <>Wallet Not Connected.</>
+                <>{t('wallet-not-connected-0')}</>
             )}
           </div>
           {viewOnlyMode && (
@@ -114,7 +116,7 @@ export const UserDataV2 = () => {
                 }
               }}
             >
-              <span>See Live Trades</span>
+              <span>{t('see-live-trades')}</span>
               <img
                 src="https://a.slack-edge.com/production-standard-emoji-assets/14.0/google-medium/1f4fa.png"
                 className="scale-75 mb-2"
@@ -130,7 +132,7 @@ export const UserDataV2 = () => {
         <>
           <Col
             className={'winner-card'}
-            head={'Chain'}
+            head={t('chain')}
             desc={
               <ChainSwitchDropdown
                 baseUrl="/profile"
@@ -147,14 +149,14 @@ export const UserDataV2 = () => {
           />
           <Col
             className={'winner-card'}
-            head={'Daily Rank'}
+            head={t('daily-rank')}
             desc={dailyRank}
             headClass={userDataHeadClass}
             descClass={userDataDescClass}
           />
           <Col
             className={'winner-card'}
-            head={'Weekly Rank'}
+            head={t('weekly-rank')}
             desc={weeklyRank}
             headClass={userDataHeadClass}
             descClass={userDataDescClass}
@@ -163,7 +165,7 @@ export const UserDataV2 = () => {
         {/* </ArbitrumOnly> */}
         <Col
           className={'winner-card'}
-          head={'Win Rate'}
+          head={t('win-rate')}
           desc={
             winrate !== null ? (
               <Display
@@ -183,7 +185,7 @@ export const UserDataV2 = () => {
         />
         <Col
           className={'winner-card'}
-          head={'Most Traded Asset'}
+          head={t('most-traded-asset')}
           desc={
             !!mostTradedAsset ? (
               <div className="flex items-center justify-center gap-2">
@@ -212,7 +214,7 @@ export const UserDataV2 = () => {
         {viewOnlyMode && (
           <Col
             className={'winner-card'}
-            head={'NFT Tier'}
+            head={t('nft-tier')}
             desc={<NFTtier userOnly={false} className="justify-center" />}
             headClass={userDataHeadClass}
             descClass={userDataDescClass}

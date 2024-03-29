@@ -1,4 +1,6 @@
+import { useTranslation } from 'react-i18next';
 import Background from './style';
+import { toLangKey } from '@Utils/langUtils';
 
 export interface ITab {
   name: string;
@@ -18,6 +20,7 @@ const BufferTab: React.FC<IBufferTab> = ({
   tablist,
   className,
 }) => {
+  const { t } = useTranslation();
   return (
     <Background className={className + ' text-f15'}>
       <div className="tabs-root flex cursor-pointer">
@@ -31,7 +34,8 @@ const BufferTab: React.FC<IBufferTab> = ({
                 }}
                 className={`  ${value == idx && 'selected-button'}`}
               >
-                {singleTab.name}
+                {/* {singleTab.name} */}
+                {t(toLangKey(singleTab.name))}
               </div>
               {singleTab.icon && singleTab.icon}
             </div>

@@ -11,10 +11,12 @@ import { affilateCode2ReferralLink } from '@Views/Referral/Utils/affiliateCode2R
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCopyToClipboard } from 'react-use';
+import { useTranslation } from 'react-i18next';
 
 export const ReferralLink = () => {
   const { viewOnlyMode } = useUserAccount();
   if (viewOnlyMode) return <></>;
+  const { t } = useTranslation();
 
   return (
     <div className="rounded-lg px-7 py-5 bg-2 flex items-center justify-between mt-5 mb-[0] sm:flex-col sm:gap-6 sm:px-6 sm:py-6">
@@ -23,10 +25,12 @@ export const ReferralLink = () => {
         <BufferLogo height={60} width={60} />{' '}
         <div className="flex flex-col items-start justify-center ">
           <div className="text-f20 mt-2 sm:text-f16">
-            Invite your friends to use Buffer
+            {/* Invite your friends to use Buffer */}
+            {t('invite')}
           </div>
           <div className="text-f14 sm:text-f12">
-            Get fee discounts and rebates!&nbsp;
+            {/* Get fee discounts and rebates!&nbsp; */}
+            {t('rebates')}
             {/* <span
               className="light-blue-text  whitespace-nowrap hover:underline  cursor-pointer"
               onClick={() => {
@@ -58,7 +62,7 @@ const Button = () => {
   const link = !!affiliateCode
     ? affilateCode2ReferralLink(affiliateCode)
     : baseURL;
-
+  const { t } = useTranslation();
   const copyLink = () => {
     try {
       copyToClipboard(link);
@@ -89,7 +93,7 @@ const Button = () => {
         onClick={() => navigate(`/referral?tab=${tabs[1]}`)}
         className="!w-fit px-5"
       >
-        Create Referral Code
+        {t('create-referral-code')}
       </BlueBtn>
     );
   }
@@ -101,7 +105,7 @@ const Button = () => {
         onClose={() => {
           setOpen(false);
         }}
-        title="Copied"
+        title={t('copied')}
         placement="top"
         disableFocusListener
         disableHoverListener
@@ -116,10 +120,10 @@ const Button = () => {
           className="bg-blue rounded-md text-f16 flex items-center gap-2 px-5 py-2 !w-fit"
         >
           <ContentCopy />
-          Copy Referral Link
+          {t('copy-referral-link')}
         </button>
       </Tooltip>
-      <div className="text-f14">Your Referral Code : {affiliateCode}</div>
+      <div className="text-f14">{t('your-referral-code')} {affiliateCode}</div>
     </div>
   );
 };

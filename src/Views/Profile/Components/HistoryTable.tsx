@@ -13,6 +13,7 @@ import { OngoingTradesTable } from '@Views/TradePage/Views/AccordionTable/Ongoin
 import { OpenInNew } from '@mui/icons-material';
 import { binaryTabs, isTestnet } from 'config';
 import { useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMedia } from 'react-use';
 
 export const useHistoryTableTabs = () => {
@@ -45,6 +46,7 @@ export const HistoryTables = () => {
   const [activeTrades, limitOrders] = useOngoingTrades();
   const { address } = useUserAccount();
   usePriceRetriable();
+  const { t } = useTranslation();
   return (
     <>
       <div className="flex items-center justify-between mb-5 sm:flex-col sm:items-start sm:gap-3 sm:mb-[0]">
@@ -73,8 +75,8 @@ export const HistoryTables = () => {
             );
           }}
         >
-          <InfoIcon tooltip="Click here to see the older version trades." />
-          Old Version Trades <OpenInNew className="mt-2" />{' '}
+          <InfoIcon tooltip={t('click-here-to-see-the-older-version-trades')} />
+          {t('old-version-trades')} <OpenInNew className="mt-2" />{' '}
         </button>
       </div>
       <TabSwitch

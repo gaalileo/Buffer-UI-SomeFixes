@@ -12,8 +12,11 @@ import { ethers } from 'ethers';
 import { useEffect, useMemo, useState } from 'react';
 import FaucetABI from './Faucet.json';
 import Background from './style';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 
 const IbfrFaucet: React.FC = () => {
+  const { t } = useTranslation();
   useEffect(() => {
     document.title = 'Buffer | Faucet';
   }, []);
@@ -28,16 +31,15 @@ const IbfrFaucet: React.FC = () => {
 
   const content = activeChain && [
     {
-      top: `Claim ${import.meta.env.VITE_ENV} ${
-        activeChain.nativeCurrency.symbol
-      }`,
+      top: `Claim ${import.meta.env.VITE_ENV} ${activeChain.nativeCurrency.symbol
+        }`,
       middle: (
         <>
-          You will have to claim{' '}
+          {t('you-will-have-to-claim')}{' '}
           <span className="text-1 w500">
             {import.meta.env.VITE_ENV} {activeChain.nativeCurrency.symbol}
           </span>{' '}
-          for gas fee.
+          {t('for-gas-fee')}
         </>
       ),
       bottom: (
@@ -47,7 +49,7 @@ const IbfrFaucet: React.FC = () => {
       ),
     },
     {
-      top: `Claim TESTNET Tokens`,
+      top: t('claim-testnet-tokens'),
       bottom: (
         <ConnectionRequired>
           <div className="flex items-center justify-center gap-3 flex-wrap">
@@ -84,7 +86,8 @@ const IbfrFaucet: React.FC = () => {
   );
 };
 
-const ClaimButton = ({ token }: { token: string }) => {
+const ClaimButton = ({ token }: { token: string; }) => {
+  const { t } = useTranslation();
   const { state } = useGlobal();
   const [btnLoading, setBtnLoading] = useState(0);
   const pools = usePoolByAsset();
@@ -97,7 +100,7 @@ const ClaimButton = ({ token }: { token: string }) => {
     if (state.txnLoading > 1) {
       return toastify({
         type: 'error',
-        msg: 'Please Confirm your pending txns.',
+        msg: t('please-confirm-your-pending-txns'),
       });
     }
     function cb(res: any) {
@@ -118,7 +121,7 @@ const ClaimButton = ({ token }: { token: string }) => {
       className="btn nowrap"
       onClick={claim}
     >
-      Claim 500 {token}
+      {t('claim-500')} {token}
     </BlueBtn>
   );
 };
@@ -168,6 +171,7 @@ const faucetClaimingSteps = {
 };
 
 const TestnetLinks = () => {
+  const { t } = useTranslation();
   const { activeChain } = useActiveChain();
   return (
     <div>
@@ -182,7 +186,7 @@ const TestnetLinks = () => {
                 ? ''
                 : idx + 1 + '.'}
               <span className="w-full">
-                {s.step}
+                {t(toLangKey(s.step))}
                 {s.options && (
                   <div className="ml-7">
                     {s.options.map((option, index) => (
@@ -209,7 +213,7 @@ const TestnetLinks = () => {
                 : idx + 1 + '.'}
               <span className="w-full">
                 <a href={s.url || s} target="_blank">
-                  {s.step || s}
+                  {t(toLangKey(s.step)) || s}
                 </a>
               </span>
             </div>

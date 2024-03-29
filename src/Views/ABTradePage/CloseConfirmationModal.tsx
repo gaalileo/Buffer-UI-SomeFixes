@@ -11,8 +11,9 @@ import {
   closeConfirmationModalAtom,
   closeLoadingAtom,
 } from './atoms';
+import { useTranslation } from 'react-i18next';
 
-const CloseConfirmationModal: React.FC<any> = ({}) => {
+const CloseConfirmationModal: React.FC<any> = ({ }) => {
   const trade = useAtomValue(closeConfirmationModalAtom);
   const setSetting = useSetAtom(chartControlsSettingsAtom);
   const settings = useAtomValue(chartControlsSettingsAtom);
@@ -21,6 +22,7 @@ const CloseConfirmationModal: React.FC<any> = ({}) => {
   const [activeTrades] = useOngoingTrades();
   const { earlyCloseHandler } = useCancelTradeFunction();
   const [val, setVal] = useState(false);
+  const { t } = useTranslation();
   useEffect(() => {
     if (!trade) return;
     const found = activeTrades.find((t) => t.queue_id == trade.queue_id);
@@ -55,10 +57,10 @@ const CloseConfirmationModal: React.FC<any> = ({}) => {
           </button>{' '}
         </div>
         <div className="text-f16 text-[#C3C2D4]">
-          Are you sure you want to close position?
+          {t('are-you-sure-you-want-to-close-position')}
         </div>
         <div className="text-f13 text-[#C3C2D4]">
-          You can close your position at market price
+          {t('you-can-close-your-position-at-market-price')}
         </div>
         <div
           className="flex items-center my-2 gap-x-[7px] text-f13 !w-fit  text-[#C3C2D4]"

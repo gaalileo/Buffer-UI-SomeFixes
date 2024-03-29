@@ -7,6 +7,7 @@ import { SettingsHeader } from './SettingsHeader';
 import { ShareSettings } from './ShareSettings';
 import { TradePanelSettings } from './TradePanelSettings';
 import { TradeSettings } from './TradeSettings';
+import LanguageSettings from '@Views/ABTradePage/Views/Settings/LanguageSettings';
 
 const SettingsBackground = styled.div`
   background-color: #232334;
@@ -35,7 +36,7 @@ const SettingsBackground = styled.div`
   }
 `;
 
-const Settings: React.FC<{ className?: string; closeDropdown: () => void }> = ({
+const Settings: React.FC<{ className?: string; closeDropdown: () => void; }> = ({
   className = '',
   closeDropdown,
 }) => {
@@ -43,6 +44,7 @@ const Settings: React.FC<{ className?: string; closeDropdown: () => void }> = ({
     <SettingsBackground className={className}>
       <SettingsHeader onClose={closeDropdown} />
       <TradeSettings />
+      <LanguageSettings />
       <ShareSettings />
       {/* <PremiumSettings /> */}
       <MiscSettings />

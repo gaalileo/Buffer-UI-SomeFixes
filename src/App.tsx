@@ -10,6 +10,7 @@ import {
   useSearchParams,
 } from 'react-router-dom';
 import { v4 } from 'uuid';
+import './i18n';
 
 export const CHART_TVID = v4().substring(0, 6);
 
@@ -71,7 +72,7 @@ const isNoLoss = import.meta.env.VITE_APP_TYPE == 'NoLoss';
   }
 })();
 
-const Redirect = ({ url }: { url: string }) => {
+const Redirect = ({ url }: { url: string; }) => {
   useEffect(() => {
     window.location.href = url;
   }, [url]);

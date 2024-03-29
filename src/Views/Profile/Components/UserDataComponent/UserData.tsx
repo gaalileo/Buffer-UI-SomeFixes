@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import { getChains } from 'src/Config/wagmiClient';
 import { Chain } from 'wagmi';
 import { useProfileGraphQl } from '../../Hooks/useProfileGraphQl';
+import { useTranslation } from 'react-i18next';
 
 const userDataHeadClass = 'text-f14 text-[#7F87A7]';
 const userDataDescClass = 'text-f16 text-[#C3C2D4]';
@@ -29,6 +30,7 @@ export const UserData = () => {
   const { activeChain } = useActiveChain();
   const chains: Chain[] = getChains();
   const navigateToTrade = useNavigateToTrade();
+  const { t } = useTranslation();
 
   const activeChainExplorer = useMemo(() => {
     const chain: Chain | undefined = chains.find(
@@ -44,11 +46,11 @@ export const UserData = () => {
     const keysArray = Object.keys(tradingMetricsData.tradesPerAsset);
     return keysArray.length > 0
       ? keysArray.reduce((a, b) =>
-          tradingMetricsData.tradesPerAsset[a] >
+        tradingMetricsData.tradesPerAsset[a] >
           tradingMetricsData.tradesPerAsset[b]
-            ? a
-            : b
-        )
+          ? a
+          : b
+      )
       : null;
   }, [tradingMetricsData]);
 
@@ -95,7 +97,7 @@ export const UserData = () => {
                 <Launch className="scale-125 mt-1" />
               </a>
             ) : (
-              <>Wallet Not Connected.</>
+                <>{t('wallet-not-connected-0')}</>
             )}
           </div>
           {viewOnlyMode && (
@@ -107,7 +109,7 @@ export const UserData = () => {
                 }
               }}
             >
-              <span>See Live Trades</span>
+              <span>{t('see-live-trades')}</span>
               <img
                 src="https://a.slack-edge.com/production-standard-emoji-assets/14.0/google-medium/1f4fa.png"
                 className="scale-75 mb-2"
@@ -123,7 +125,7 @@ export const UserData = () => {
         <>
           <Col
             className={'winner-card'}
-            head={'Chain'}
+            head={t('chain')}
             desc={
               <ChainSwitchDropdown
                 baseUrl="/profile"
@@ -140,14 +142,14 @@ export const UserData = () => {
           />
           <Col
             className={'winner-card'}
-            head={'Daily Rank'}
+            head={t('daily-rank')}
             desc={dailyRank}
             headClass={userDataHeadClass}
             descClass={userDataDescClass}
           />
           <Col
             className={'winner-card'}
-            head={'Weekly Rank'}
+            head={t('weekly-rank')}
             desc={weeklyRank}
             headClass={userDataHeadClass}
             descClass={userDataDescClass}
@@ -156,13 +158,13 @@ export const UserData = () => {
         {/* </ArbitrumOnly> */}
         <Col
           className={'winner-card'}
-          head={'Win Rate'}
+          head={t('win-rate')}
           desc={
             tradingMetricsData ? (
               <Display
                 data={
                   (tradingMetricsData.tradeWon * 100) /
-                    tradingMetricsData.totalTrades || '0'
+                  tradingMetricsData.totalTrades || '0'
                 }
                 unit={'%'}
                 className={userDataDescClass + ' !w-full'}
@@ -179,7 +181,7 @@ export const UserData = () => {
         />
         <Col
           className={'winner-card'}
-          head={'Most Traded Asset'}
+          head={t('most-traded-asset')}
           desc={
             !!mostTradedAsset ? (
               <div className="flex items-center justify-center gap-2">
@@ -208,7 +210,7 @@ export const UserData = () => {
         {viewOnlyMode && (
           <Col
             className={'winner-card'}
-            head={'NFT Tier'}
+            head={t('nft-tier')}
             desc={<NFTtier userOnly={false} className="justify-center" />}
             headClass={userDataHeadClass}
             descClass={userDataDescClass}

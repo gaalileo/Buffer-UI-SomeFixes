@@ -36,6 +36,7 @@ import {
 import { Share } from './ShareModal/ShareIcon';
 import { getPayout } from './ShareModal/utils';
 import { JackpotChip } from '@Views/Jackpot/JackpotChip';
+import { useTranslation } from 'react-i18next';
 
 enum TableColumn {
   Asset = 0,
@@ -72,7 +73,7 @@ const HistoryTable: React.FC<{
   overflow = true,
 }) => {
   const { getPoolInfo } = usePoolInfo();
-
+  const { t } = useTranslation();
   const headNameArray = platform
     ? [
         'Asset',
@@ -104,7 +105,6 @@ const HistoryTable: React.FC<{
   const isNotMobile = useMedia('(min-width:1200px)');
   const isMobile = useMedia('(max-width:600px)');
   const navigateToProfile = useNavigateToProfile();
-
   const BodyFormatter: any = (row: number, col: number) => {
     const trade = trades?.[row];
     if (trade === undefined) return <></>;
@@ -122,13 +122,13 @@ const HistoryTable: React.FC<{
     if (!pnl) return 'Calculating..';
     const status = gt(pnl?.toString(), '0')
       ? {
-          tooltip: 'You won this bet!',
+        tooltip: t('you-won-this-bet'),
           chip: 'Win',
           icon: <SuccessIcon width={14} height={14} />,
           textColor: 'text-green',
         }
       : {
-          tooltip: 'You lost this trade!',
+        tooltip: t('you-lost-this-trade'),
           chip: 'Loss',
           icon: <FailedSuccess width={14} height={14} />,
           textColor: 'text-red',
@@ -146,7 +146,7 @@ const HistoryTable: React.FC<{
           />
         );
       case TableColumn.ExpiryPrice:
-        if (!expiryPrice) return 'Fetching...';
+        if (!expiryPrice) return t('fetching');
         return (
           <Display
             className="!justify-start"
@@ -198,7 +198,7 @@ const HistoryTable: React.FC<{
           />
         );
       case TableColumn.Payout:
-        if (!expiryPrice) return 'Processing...';
+        if (!expiryPrice) return t('processing');
         if (isNotMobile)
           return (
             <div>
@@ -228,7 +228,7 @@ const HistoryTable: React.FC<{
                   </span>
                 </>
               ) : (
-                'Calculating..'
+                  t('calculating')
               )}
             </div>
           );
@@ -252,7 +252,7 @@ const HistoryTable: React.FC<{
             </div>
           );
       case TableColumn.Status:
-        if (!expiryPrice) return 'Processing...';
+        if (!expiryPrice) return t('processing');
 
         return (
           <NumberTooltip content={status.tooltip}>
@@ -293,17 +293,17 @@ const HistoryTable: React.FC<{
           );
         return <Share data={trade} market={trade.market} poolInfo={poolInfo} />;
     }
-    return 'Unhandled Body';
+    return t('unhandled-body');
   };
 
   const Accordian = (row: number) => {
     const trade = trades?.[row];
-
-    if (!trade) return <>Something went wrong.</>;
+    const { t } = useTranslation();
+    if (!trade) return <>{t('something-went-wrong')}</>;
     // if (!readcallData) return <></>;
 
     const poolInfo = getPoolInfo(trade?.pool?.pool);
-    if (!poolInfo) return <>Something went wrong.</>;
+    if (!poolInfo) return <>{t('something-went-wrong')}</>;
     const minClosingTime = getExpiry(trade);
     let expiryPrice: number | null = trade.expiry_price;
     if (!expiryPrice) {
@@ -341,7 +341,7 @@ const HistoryTable: React.FC<{
         {platform ? (
           <RowBetween className="mt-5">
             <ColumnGap gap="3px">
-              <div className={headerClass}>Strike</div>
+              <div className={headerClass}>{t('strike')}</div>
               <StrikePriceComponent
                 trade={trade}
                 spread={0}
@@ -349,7 +349,7 @@ const HistoryTable: React.FC<{
               />
             </ColumnGap>
             <ColumnGap gap="3px">
-              <div className={headerClass}>Expiry</div>
+              <div className={headerClass}>{t('expiry')}</div>
               <div className={descClass}>
                 {expiryPrice
                   ? numberWithCommas(
@@ -358,7 +358,7 @@ const HistoryTable: React.FC<{
                         trade.market.price_precision.toString().length - 1
                       )
                     )
-                  : 'Processing...'}
+                  : t('processing')}
               </div>
             </ColumnGap>
             <ColumnGap gap="3px">
@@ -368,7 +368,7 @@ const HistoryTable: React.FC<{
                   ? numberWithCommas(
                       toFixed(divide(payout, poolInfo.decimals) as string, 2)
                     )
-                  : 'Calculating...'}
+                  : t('calculating-0')}
                 <img
                   src={getAssetImageUrl(trade.token)}
                   width={13}
@@ -390,7 +390,7 @@ const HistoryTable: React.FC<{
                         trade.market.price_precision.toString().length - 1
                       )
                     )
-                  : 'Processing...'}
+                    : t('processing')}
               </span>
             </div>
             <div className="flex items-center">
@@ -400,7 +400,7 @@ const HistoryTable: React.FC<{
                   ? numberWithCommas(
                       toFixed(divide(payout, poolInfo.decimals) as string, 2)
                     )
-                  : 'Calculating...'}
+                    : t('calculating-0')}
               </span>
               <img
                 src={getAssetImageUrl(trade.token)}
@@ -444,7 +444,7 @@ const HistoryTable: React.FC<{
         // else setInspectTrade({ trade: trades?.[idx] });
       }}
       showOnly={onlyView}
-      error={<TableErrorRow msg="No Trade History." />}
+      error={<TableErrorRow msg={t('no-trade-history')} />}
       loading={isLoading}
       className={className}
       overflow={overflow}

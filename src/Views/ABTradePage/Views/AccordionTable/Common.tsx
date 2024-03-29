@@ -138,12 +138,14 @@ export const TableHeader: React.FC<ITableHeader> = ({
   className = '',
   firstColClassName,
 }) => {
-  if (col > headsArr.length) return <div>Unhandled col of header</div>;
+  const { t } = useTranslation();
+  if (col > headsArr.length) return <div>{t('unhandled-col-of-header')}</div>;
   return (
     <TableHeads
       style={col === 0 ? firstColClassName + ' ' + className : className}
     >
-      {headsArr[col]}
+      <Trans i18nKey={toLangKey(headsArr[col] as string)} />
+      {/* {headsArr[col]} */}
     </TableHeads>
   );
 };
@@ -151,7 +153,11 @@ export const CustomTableHeader: React.FC<{
   content: string;
   className?: string;
 }> = ({ content, className = '' }) => {
-  return <TableHeads style={className}>{content}</TableHeads>;
+  const { t } = useTranslation();
+  return <TableHeads style={className}>
+    <Trans i18nKey={toLangKey(content)} />
+    {/* {content} */}
+  </TableHeads>;
 };
 
 //  export const earlyCloseStatus = (data:TradeType)=>{
@@ -232,6 +238,8 @@ import { queuets2priceAtom } from '@Views/ABTradePage/atoms';
 import { getSafeStrike } from '@Views/ABTradePage/utils/getSafeStrike';
 import { useAtomValue } from 'jotai';
 import NoMatchFound from 'src/SVG/Elements/NoMatchFound';
+import { Trans, useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 // export const getEarlyCloseStatus = (
 //   trade: TradeType
 // ): [status: boolean, tooltip?: string] => {

@@ -135,12 +135,13 @@ export const TableHeader: React.FC<ITableHeader> = ({
   className,
   firstColClassName,
 }) => {
-  if (col > headsArr.length) return <div>Unhandled col of header</div>;
+  const { t } = useTranslation();
+  if (col > headsArr.length) return <div>{t('unhandled-col-of-header')}</div>;
   return (
     <TableHeads
       style={col === 0 ? firstColClassName + ' ' + className : className}
     >
-      {headsArr[col]}
+      {t(toLangKey(headsArr[col] as string))}
     </TableHeads>
   );
 };
@@ -236,6 +237,8 @@ import { queuets2priceAtom } from '@Views/TradePage/atoms';
 import { getSafeStrike } from '@Views/TradePage/utils/getSafeStrike';
 import { useAtomValue } from 'jotai';
 import NoMatchFound from 'src/SVG/Elements/NoMatchFound';
+import { useTranslation } from 'react-i18next';
+import { toLangKey } from '@Utils/langUtils';
 export const getEarlyCloseStatus = (
   trade: TradeType
 ): [status: boolean, tooltip?: string] => {

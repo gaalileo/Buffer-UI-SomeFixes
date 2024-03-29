@@ -5,32 +5,34 @@ import { useUserReferralStats } from '@Views/Referral/Hooks/useUserReferralStats
 import { useProfileGraphQl2 } from '../../Hooks/useProfileGraphQl2';
 import { Referral } from './ReferralCard';
 import { TradingCardV2 } from './TradingCardV2';
+import { useTranslation } from 'react-i18next';
 
 export const ProfileCardsV2 = () => {
+  const { t } = useTranslation();
   const metrics = useProfileGraphQl2();
-  const { data }: { data?: IReferralStat } = useUserReferralStats();
+  const { data }: { data?: IReferralStat; } = useUserReferralStats();
   return (
     <Section
-      Heading={<div className="text-f22">Metrics</div>}
+      Heading={<div className="text-f22">{t('metrics')}</div>}
       subHeading={<></>}
       Cards={[
-        <Referral data={data} heading={'Referral Metrics'} />,
+        <Referral data={data} heading={t('referral-metrics')} />,
         <TradingCardV2
           data={metrics?.['USDC']}
-          heading={'USDC Trading Metrics'}
+          heading={t('usdc-trading-metrics')}
           tokenName="USDC"
         />,
         <ArbitrumOnly hide>
           <TradingCardV2
             data={metrics?.['ARB']}
-            heading={'ARB Trading Metrics'}
+            heading={t('arb-trading-metrics')}
             tokenName="ARB"
           />
         </ArbitrumOnly>,
         <ArbitrumOnly hide>
           <TradingCardV2
             data={metrics?.['BFR']}
-            heading={'BFR Trading Metrics'}
+            heading={t('bfr-trading-metrics')}
             tokenName="BFR"
           />
         </ArbitrumOnly>,
