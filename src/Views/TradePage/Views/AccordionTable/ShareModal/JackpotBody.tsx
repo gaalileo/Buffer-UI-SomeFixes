@@ -18,6 +18,10 @@ const BGImage = styled.div`
   padding-top: 22px;
   height: 100%;
 `;
+const token_monochrome = {
+  USDC: '/usdc_monochrome.png',
+  ARB: '/ARBMonohrome.svg',
+};
 const JackpotBody: React.FC<{
   trade: (TradeType & { jackpotAmount: string }) | null;
 }> = ({ trade }) => {
@@ -42,9 +46,9 @@ const JackpotBody: React.FC<{
           <div className="font-[600]   mt-6 text-[#B1B6C6] text-f15 w-full text-center">
             You won the Jackpot..
           </div>
-          <div className="flex justify-center items-center mt-4">
+          <div className="flex justify-between items-center mt-4">
             {trade ? (
-              <div className="mr-4 font-[500] text-[20px] flex items-center ">
+              <div className="mr-4 font-[500] text-[20px] flex items-center  whitespace-nowrap ">
                 {token0}-{token1}{' '}
                 <UpDownChip
                   isUp={trade?.is_above}
@@ -58,7 +62,7 @@ const JackpotBody: React.FC<{
                 className="w-[120px] h-[25px] rounded-md"
               />
             )}
-            <div className="flex text-[24px] items-center font-[700] ml-[50px] text-[#fff] ">
+            <div className="flex text-[24px] items-center font-[700]  text-[#fff] ">
               <span className="text-[16px] font-[500] text-[#B1B6C6]">
                 Bet:&nbsp;
               </span>{' '}
@@ -67,7 +71,10 @@ const JackpotBody: React.FC<{
                 className="!justify-start"
                 // unit={poolInfo.token}
               />{' '}
-              <img src="/ARBMonohrome.svg" className="w-[18px]  ml-2"></img>
+              <img
+                src={token_monochrome[trade.token] || token_monochrome['ARB']}
+                className="w-[18px]  ml-2"
+              ></img>
             </div>
           </div>
           <div className="flex justify-center items-center mt-3 text-[#fff]">
