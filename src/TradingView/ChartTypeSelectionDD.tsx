@@ -1,3 +1,4 @@
+import { toLangKey } from '@Utils/langUtils';
 import BufferDropdown from '@Views/Common/BufferDropdown';
 import { isTestnet } from 'config';
 import { atomWithStorage } from 'jotai/utils';
@@ -250,7 +251,7 @@ const ChartTypeSelectionDD: React.FC<{
             key={value.type}
           >
             <div className="w-[30px] h-[30px]">{value.icon}</div>
-            <div className={`text-center `}>{key.replace('_', ' ')}</div>
+            <div className={`text-center `}>{t(toLangKey(key.replace('_', ' ')))}</div>
           </div>
         ))}
       </div>
@@ -286,7 +287,7 @@ const ChartTypeSelectionDD: React.FC<{
               >
                 {item.value.icon}
                 <span className="ele whitespace-nowrap">
-                  {item.name.replace('_', ' ')}
+                  {t(toLangKey(item.name.replace('_', ' ')))}
                 </span>
               </div>
             );

@@ -307,5 +307,14 @@
   "total-traders": "トータルトレーダーズ",
   "total-trades": "総取引数",
   "usdc-fees-/-volume": "USDC 手数料 / ボリューム",
-  "usdc-fees-/-volume-(24h)": "USDC 手数料/量 (24 時間)"
+  "usdc-fees-/-volume-(24h)": "USDC 手数料/量 (24 時間)",
+  "area": "エリア",
+  "bar": "バー",
+  "baseline": "ベースライン",
+  "candle": "キャンドル",
+  "column": "カラム",
+  "heikin-ashi": "平均足",
+  "hi-lo": "ハイロー",
+  "hollow-candles": "中空キャンドル",
+  "line": "ライン"
 }

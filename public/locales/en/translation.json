@@ -185,7 +185,7 @@
   "processing-0": "processing...",
   "no-price": "No Price",
   "time-left": "Time Left",
-  "Pnl-|-Probability": "",
+  "Pnl-|-Probability": "Pnl | Probability",
   "new": "New",
   "arbitrum-sepolia": "Arbitrum Sepolia",
   "ether": "Ether",
@@ -307,5 +307,14 @@
   "total-traders": "Total Traders",
   "average-trade-size": "Average Trade Size",
   "average-daily-volume": "Average Daily Volume",
-  "total-trades": "Total Trades"
+  "total-trades": "Total Trades",
+  "bar": "Bar",
+  "candle": "Candle",
+  "area": "Area",
+  "line": "Line",
+  "baseline": "Baseline",
+  "heikin-ashi": "Heikin-Ashi",
+  "hollow-candles": "Hollow Candles",
+  "hi-lo": "Hi-Lo",
+  "column": "Column"
 }

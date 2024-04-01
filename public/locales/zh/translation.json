@@ -307,5 +307,14 @@
   "total-traders": "交易者总数",
   "total-trades": "总交易数",
   "usdc-fees-/-volume": "USDC 费用/数量",
-  "usdc-fees-/-volume-(24h)": "USDC 费用/交易量（24 小时）"
+  "usdc-fees-/-volume-(24h)": "USDC 费用/交易量（24 小时）",
+  "area": "区域",
+  "bar": "酒吧",
+  "baseline": "基线",
+  "candle": "蜡烛",
+  "column": "柱子",
+  "heikin-ashi": "平均足",
+  "hi-lo": "高低",
+  "hollow-candles": "空心蜡烛",
+  "line": "线"
 }
